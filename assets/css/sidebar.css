@@ -1,0 +1,486 @@
+/* =========================================================
+   GrocerEase SIDEBAR
+   ========================================================= */
+
+:root {
+    --sidebar-width: 250px;
+    --sidebar-bg: #ffffff;
+    --sidebar-border: #e2e8f0;
+    --sidebar-text: #334155;
+    --sidebar-muted: #64748b;
+    --sidebar-active-bg: #eff6ff;
+    --sidebar-active-text: #2563eb;
+    --sidebar-hover-bg: #f8fafc;
+}
+
+
+/* =========================================================
+   SIDEBAR CONTAINER
+   ========================================================= */
+
+.app-sidebar {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    bottom: 0;
+
+    width: var(--sidebar-width);
+
+    background: var(--sidebar-bg);
+
+    border-right: 1px solid var(--sidebar-border);
+
+    display: flex;
+    flex-direction: column;
+
+    box-sizing: border-box;
+
+    z-index: 1100;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.sidebar-brand {
+    height: 118px;
+
+    padding: 20px 16px;
+
+    box-sizing: border-box;
+
+    border-bottom: 1px solid #edf2f7;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+}
+
+
+.sidebar-brand-link {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    text-decoration: none;
+
+    color: inherit;
+}
+
+
+.sidebar-brand-icon {
+    width: 42px;
+    height: 42px;
+
+    flex: 0 0 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #dbeafe;
+
+    border-radius: 12px;
+
+    font-size: 20px;
+}
+
+
+.sidebar-brand-text {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+
+.sidebar-brand-name {
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    font-size: 17px;
+    font-weight: 700;
+
+    line-height: 1.25;
+
+    color: #0f172a;
+
+    white-space: nowrap;
+}
+
+
+.sidebar-brand-subtitle {
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    font-size: 11px;
+    font-weight: 400;
+
+    line-height: 1.25;
+
+    color: #64748b;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.sidebar-navigation {
+    flex: 1 1 auto;
+
+    min-height: 0;
+
+    padding: 16px 8px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    box-sizing: border-box;
+}
+
+
+.sidebar-navigation::-webkit-scrollbar {
+    width: 5px;
+}
+
+
+.sidebar-navigation::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+.sidebar-navigation::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+
+/* =========================================================
+   MAIN SIDEBAR LINK
+   ========================================================= */
+
+.sidebar-link {
+    width: 100%;
+    min-height: 44px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 10px 14px;
+
+    margin: 2px 0;
+
+    box-sizing: border-box;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: transparent;
+
+    color: var(--sidebar-text);
+
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    line-height: 1.3;
+
+    text-decoration: none;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.15s ease;
+}
+
+
+.sidebar-link:hover {
+    background: var(--sidebar-hover-bg);
+
+    color: var(--sidebar-active-text);
+}
+
+
+.sidebar-link.active {
+    background: var(--sidebar-active-bg);
+
+    color: var(--sidebar-active-text);
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   SIDEBAR ICON
+   ========================================================= */
+
+.sidebar-icon {
+    width: 22px;
+    min-width: 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #64748b;
+
+    font-size: 15px;
+
+    line-height: 1;
+}
+
+
+.sidebar-link:hover .sidebar-icon,
+.sidebar-link.active .sidebar-icon {
+    color: var(--sidebar-active-text);
+}
+
+
+/* =========================================================
+   SIDEBAR LABEL
+   ========================================================= */
+
+.sidebar-label {
+    min-width: 0;
+
+    flex: 1;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   DROPDOWN GROUP
+   ========================================================= */
+
+.sidebar-group {
+    width: 100%;
+
+    margin: 2px 0;
+}
+
+
+/* =========================================================
+   DROPDOWN BUTTON
+   ========================================================= */
+
+.sidebar-toggle {
+    appearance: none;
+    -webkit-appearance: none;
+
+    font: inherit;
+}
+
+
+/* =========================================================
+   DROPDOWN ARROW
+   ========================================================= */
+
+.sidebar-arrow {
+    margin-left: auto;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    transition:
+        transform 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.sidebar-toggle:hover .sidebar-arrow {
+    color: #2563eb;
+}
+
+
+.sidebar-group.open .sidebar-arrow {
+    transform: rotate(180deg);
+
+    color: #2563eb;
+}
+
+
+/* =========================================================
+   SUBMENU
+   ========================================================= */
+
+.sidebar-submenu {
+    display: none;
+
+    padding: 4px 0 6px 34px;
+}
+
+
+.sidebar-group.open .sidebar-submenu {
+    display: block;
+}
+
+
+/* =========================================================
+   SUBMENU LINK
+   ========================================================= */
+
+.sidebar-sublink {
+    display: block;
+
+    width: 100%;
+
+    min-height: 36px;
+
+    padding: 8px 12px;
+
+    margin: 2px 0;
+
+    box-sizing: border-box;
+
+    border-radius: 8px;
+
+    color: #64748b;
+
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    line-height: 1.35;
+
+    text-decoration: none;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.sidebar-sublink:hover {
+    background: #f8fafc;
+
+    color: #2563eb;
+}
+
+
+.sidebar-sublink.active {
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   SIDEBAR FOOTER
+   ========================================================= */
+
+.sidebar-footer {
+    flex-shrink: 0;
+
+    padding: 14px 16px;
+
+    border-top: 1px solid #edf2f7;
+
+    background: #ffffff;
+}
+
+
+.sidebar-footer-text {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+
+.sidebar-footer-text span {
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    color: #64748b;
+}
+
+
+.sidebar-footer-text small {
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    font-size: 10px;
+
+    color: #94a3b8;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .app-sidebar {
+        transform: translateX(-100%);
+
+        transition:
+            transform 0.25s ease;
+
+        box-shadow: 8px 0 25px rgba(15, 23, 42, 0.08);
+    }
+
+
+    .app-sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+}

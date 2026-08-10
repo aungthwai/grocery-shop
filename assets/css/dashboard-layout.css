@@ -1,0 +1,217 @@
+/* =========================================================
+   GrocerEase Dashboard Application Layout
+   ========================================================= */
+
+
+/* =========================================================
+   VARIABLES
+   ========================================================= */
+
+:root {
+    --dashboard-sidebar-width: 250px;
+    --dashboard-topbar-height: 70px;
+
+    --dashboard-bg: #f5f8fc;
+}
+
+
+/* =========================================================
+   PAGE FOUNDATION
+   ========================================================= */
+
+html,
+body {
+    margin: 0;
+
+    min-height: 100%;
+
+    width: 100%;
+}
+
+
+body {
+    background: var(--dashboard-bg);
+
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   APPLICATION LAYOUT
+   ========================================================= */
+
+.app-layout {
+    width: 100%;
+
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: stretch;
+
+    background: var(--dashboard-bg);
+}
+
+
+/* =========================================================
+   SIDEBAR SLOT
+   ========================================================= */
+
+.app-sidebar-slot {
+    flex: 0 0 var(--dashboard-sidebar-width);
+
+    width: var(--dashboard-sidebar-width);
+
+    min-width: var(--dashboard-sidebar-width);
+
+    min-height: 100vh;
+
+    position: relative;
+
+    z-index: 1100;
+}
+
+
+.app-sidebar-slot > .app-sidebar {
+    width: var(--dashboard-sidebar-width);
+
+    min-height: 100vh;
+}
+
+
+/* =========================================================
+   MAIN AREA
+   ========================================================= */
+
+.app-main-slot {
+    flex: 1 1 auto;
+
+    width: calc(
+        100% - var(--dashboard-sidebar-width)
+    );
+
+    min-width: 0;
+
+    min-height: 100vh;
+
+    display: flex;
+
+    flex-direction: column;
+
+    position: relative;
+
+    background: var(--dashboard-bg);
+}
+
+
+/* =========================================================
+   TOPBAR SLOT
+   ========================================================= */
+
+.app-topbar-slot {
+    width: 100%;
+
+    height: var(--dashboard-topbar-height);
+
+    min-height: var(--dashboard-topbar-height);
+
+    flex: 0 0 var(--dashboard-topbar-height);
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 900;
+
+    background: #ffffff;
+}
+
+
+.app-topbar-slot > .app-topbar {
+    width: 100%;
+
+    height: var(--dashboard-topbar-height);
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   DASHBOARD MAIN CONTENT
+   ========================================================= */
+
+.dashboard-main-content {
+    width: 100%;
+
+    min-width: 0;
+
+    flex: 1 1 auto;
+
+    box-sizing: border-box;
+
+    background: var(--dashboard-bg);
+}
+
+
+/* =========================================================
+   DASHBOARD PAGE
+   ========================================================= */
+
+.dashboard-main-content .dashboard-page {
+    width: 100%;
+
+    min-width: 0;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   DESKTOP SAFETY
+   ========================================================= */
+
+@media (min-width: 901px) {
+
+    .app-sidebar {
+        transform: translateX(0) !important;
+    }
+
+}
+
+
+/* =========================================================
+   TABLET / MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .app-layout {
+        display: block;
+
+        min-height: 100vh;
+    }
+
+
+    .app-sidebar-slot {
+        width: 0;
+
+        min-width: 0;
+
+        flex: none;
+
+        min-height: 0;
+    }
+
+
+    .app-main-slot {
+        width: 100%;
+
+        min-height: 100vh;
+    }
+
+
+    .app-topbar-slot {
+        width: 100%;
+    }
+
+}
