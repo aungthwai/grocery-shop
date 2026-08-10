@@ -29,7 +29,7 @@ exit;
 -
 */
 require_once "../../config/database.php";
-$basePath = "/grocery_shop";
+$basePath = "/grocery-shop";
 /*
 |-------------------------------------------------------------------------
 -
