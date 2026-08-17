@@ -361,188 +361,206 @@ Welcome back! Here’s today’s business overview
 KPI CARDS
 ================================================= -->
 <div class="dashboard-kpi-grid">
-<!-- =================================================
-CARD 1 — TOTAL CUSTOMERS
-================================================= -->
-<div class="kpi-card kpi-blue">
-<div class="kpi-icon">
-<svg
-width="22"
-height="22"
-viewBox="0 0 24 24"
-fill="none"
-xmlns="http://www.w3.org/2000/svg"
-aria-hidden="true"
->
-<path
-d="M16 21V19C16 16.7909 14.2091 15 12 15H6C3.79086
-15 2 16.7909 2 19V21"
-stroke="currentColor"
-stroke-width="2"
-stroke-linecap="round"
-stroke-linejoin="round"
-/>
-<circle
-cx="9"
-cy="7"
-r="4"
-stroke="currentColor"
-stroke-width="2"
-/>
-<path
-d="M22 21V19C21.9986 17.1771 20.765 15.5847 19
-15.13"
-stroke="currentColor"
-stroke-width="2"
-stroke-linecap="round"
-/>
-<path
-d="M16 3.13C17.7699 3.58316 19.0075 5.17822
-19.0075 7C19.0075 8.82178 17.7699 10.4168 16 10.87"
-stroke="currentColor"
-stroke-width="2"
-stroke-linecap="round"
-/>
-</svg>
-</div>
-<div class="kpi-content">
-<div class="kpi-title">
-Total Customers
-</div>
-<div class="kpi-value">
-<?php
-echo number_format($totalCustomers);
-?>
-</div>
-</div>
-</div>
-<!-- =================================================
-CARD 2 — ACTIVE CUSTOMERS
-================================================= -->
-<div class="kpi-card kpi-green">
-<div class="kpi-icon">
-<svg
-width="22"
-height="22"
-viewBox="0 0 24 24"
-fill="none"
-xmlns="http://www.w3.org/2000/svg"
-aria-hidden="true"
->
-<circle
-cx="12"
-cy="8"
-r="4"
-stroke="currentColor"
-stroke-width="2"
-/>
-<path
-d="M4 21C4 16.5817 7.58172 13 12 13C16.4183 13 20
-16.5817 20 21"
-stroke="currentColor"
-stroke-width="2"
-stroke-linecap="round"
-/>
-</svg>
-</div>
-<div class="kpi-content">
-<div class="kpi-title">
-Active Customers
-</div>
-<div class="kpi-value">
-<?php
-echo number_format($activeCustomers);
-?>
-</div>
-</div>
-</div>
-<!-- =================================================
-CARD 3 — OUTSTANDING DUE
-================================================= -->
-<div class="kpi-card kpi-orange">
-<div class="kpi-icon">
-<svg
-width="22"
-height="22"
-viewBox="0 0 24 24"
-fill="none"
-xmlns="http://www.w3.org/2000/svg"
-aria-hidden="true"
->
-<circle
-cx="12"
-cy="12"
-r="9"
-stroke="currentColor"
-stroke-width="2"
-/>
-<path
-d="M12 7V17"
-stroke="currentColor"
-stroke-width="2"
-stroke-linecap="round"
-/>
-<path
-d="M15 9C15 7.89543 13.6569 7 12 7C10.3431 7 9
-7.89543 9 8.5C9 10 15 10 15 12.5C15 14 13.6569 15 12 15C10.3431 15 9
-14.1046 9 13"
-stroke="currentColor"
-stroke-width="2"
-stroke-linecap="round"
-/>
-</svg>
-</div>
-<div class="kpi-content">
-<div class="kpi-title">
-Outstanding Due
-</div>
-<div class="kpi-value">
-৳<?php
-echo number_format($outstandingDue, 2);
-?>
-</div>
-</div>
-</div>
-<!-- =================================================
-CARD 4 — OVERDUE CUSTOMERS
-================================================= -->
-<div class="kpi-card kpi-red">
-<div class="kpi-icon">
-<svg
-width="22"
-height="22"
-viewBox="0 0 24 24"
-fill="none"
-xmlns="http://www.w3.org/2000/svg"
-aria-hidden="true"
->
-<circle
-cx="12"
-cy="12"
-r="9"
-stroke="currentColor"
-stroke-width="2"
-/>
-<path
-d="M12 7V12L15 15"
-stroke="currentColor"
-stroke-width="2"
-stroke-linecap="round"
-stroke-linejoin="round"
-/>
-</svg>
-</div>
-<div class="kpi-content">
-<div class="kpi-title">
-Overdue Customers
-</div>
-<div class="kpi-value">
-<?php
-echo number_format($overdueCustomers);
-?>
-</div>
-</div>
-</div>
+
+    <!-- =================================================
+         CARD 1 — TOTAL CUSTOMERS
+         Opens Customer Management
+    ================================================== -->
+    <a href="../customers/index.php" class="kpi-card kpi-blue">
+        <div class="kpi-icon">
+            <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+            >
+                <path
+                    d="M16 21V19C16 16.7909 14.2091 15 12 15H6C3.79086 15 2 16.7909 2 19V21"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                />
+                <circle
+                    cx="9"
+                    cy="7"
+                    r="4"
+                    stroke="currentColor"
+                    stroke-width="2"
+                />
+                <path
+                    d="M22 21V19C21.9986 17.1771 20.765 15.5847 19 15.13"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                />
+                <path
+                    d="M16 3.13C17.7699 3.58316 19.0075 5.17822 19.0075 7C19.0075 8.82178 17.7699 10.4168 16 10.87"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                />
+            </svg>
+        </div>
+
+        <div class="kpi-content">
+            <div class="kpi-title">
+                Total Customers
+            </div>
+
+            <div class="kpi-value">
+                <?php
+                echo number_format($totalCustomers);
+                ?>
+            </div>
+        </div>
+    </a>
+
+
+    <!-- =================================================
+         CARD 2 — ACTIVE CUSTOMERS
+         Opens Customer Management
+    ================================================== -->
+    <a href="../customers/index.php" class="kpi-card kpi-green">
+        <div class="kpi-icon">
+            <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+            >
+                <circle
+                    cx="12"
+                    cy="8"
+                    r="4"
+                    stroke="currentColor"
+                    stroke-width="2"
+                />
+
+                <path
+                    d="M4 21C4 16.5817 7.58172 13 12 13C16.4183 13 20 16.5817 20 21"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                />
+            </svg>
+        </div>
+
+        <div class="kpi-content">
+            <div class="kpi-title">
+                Active Customers
+            </div>
+
+            <div class="kpi-value">
+                <?php
+                echo number_format($activeCustomers);
+                ?>
+            </div>
+        </div>
+    </a>
+
+
+    <!-- =================================================
+         CARD 3 — OUTSTANDING DUE
+         Opens Wholesale Due Management
+    ================================================== -->
+    <a href="../wholesale/index.php" class="kpi-card kpi-orange">
+        <div class="kpi-icon">
+            <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+            >
+                <circle
+                    cx="12"
+                    cy="12"
+                    r="9"
+                    stroke="currentColor"
+                    stroke-width="2"
+                />
+
+                <path
+                    d="M12 7V17"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                />
+
+                <path
+                    d="M15 9C15 7.89543 13.6569 7 12 7C10.3431 7 9 7.89543 9 8.5C9 10 15 10 15 12.5C15 14 13.6569 15 12 15C10.3431 15 9 14.1046 9 13"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                />
+            </svg>
+        </div>
+
+        <div class="kpi-content">
+            <div class="kpi-title">
+                Outstanding Due
+            </div>
+
+            <div class="kpi-value">
+                ৳<?php
+                echo number_format($outstandingDue, 2);
+                ?>
+            </div>
+        </div>
+    </a>
+
+
+    <!-- =================================================
+         CARD 4 — OVERDUE CUSTOMERS
+         Opens Wholesale Due Management
+    ================================================== -->
+    <a href="../wholesale/index.php" class="kpi-card kpi-red">
+        <div class="kpi-icon">
+            <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+            >
+                <circle
+                    cx="12"
+                    cy="12"
+                    r="9"
+                    stroke="currentColor"
+                    stroke-width="2"
+                />
+
+                <path
+                    d="M12 7V12L15 15"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                />
+            </svg>
+        </div>
+
+        <div class="kpi-content">
+            <div class="kpi-title">
+                Overdue Customers
+            </div>
+
+            <div class="kpi-value">
+                <?php
+                echo number_format($overdueCustomers);
+                ?>
+            </div>
+        </div>
+    </a>
+
 </div>
 <!-- =====================================================
 SALES OVERVIEW

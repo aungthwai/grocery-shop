@@ -25,9 +25,12 @@
 |--------------------------------------------------------------------------
 */
 
+
 /*
 |--------------------------------------------------------------------------
-| Base Path
+| BASE PATH
+|--------------------------------------------------------------------------
+| Use one absolute application path so navigation works from every module.
 |--------------------------------------------------------------------------
 */
 
@@ -38,16 +41,24 @@ if (!isset($basePath) || $basePath === '') {
 
 /*
 |--------------------------------------------------------------------------
-| Current Page
+| CURRENT PAGE
 |--------------------------------------------------------------------------
 */
 
 $currentPath = $_SERVER['PHP_SELF'] ?? '';
 
+/*
+|--------------------------------------------------------------------------
+| NORMALIZE BASE PATH
+|--------------------------------------------------------------------------
+*/
+
+$basePath = rtrim($basePath, '/');
+
 
 /*
 |--------------------------------------------------------------------------
-| Sidebar Active Helper
+| SIDEBAR ACTIVE HELPER
 |--------------------------------------------------------------------------
 */
 
@@ -65,18 +76,18 @@ if (!function_exists('isSidebarActive')) {
 
 /*
 |--------------------------------------------------------------------------
-| Dropdown States
+| DROPDOWN STATES
 |--------------------------------------------------------------------------
 */
 
 $productOpen =
-    isSidebarActive('/products/');
+    isSidebarActive('/modules/products/');
 
 $supplierOpen =
-    isSidebarActive('/supplier/');
+    isSidebarActive('/modules/supplier/');
 
 $settingsOpen =
-    isSidebarActive('/settings/');
+    isSidebarActive('/modules/settings/');
 
 ?>
 
@@ -91,7 +102,7 @@ $settingsOpen =
     <div class="sidebar-brand">
 
         <a
-            href="<?php echo htmlspecialchars($basePath); ?>/modules/dashboard/index.php"
+            href="<?php echo htmlspecialchars($basePath, ENT_QUOTES, 'UTF-8'); ?>/modules/dashboard/index.php"
             class="sidebar-brand-link"
         >
 
@@ -131,8 +142,8 @@ $settingsOpen =
              ================================================= -->
 
         <a
-            href="<?php echo htmlspecialchars($basePath); ?>/modules/dashboard/index.php"
-            class="sidebar-link <?php echo isSidebarActive('/dashboard/') ? 'active' : ''; ?>"
+            href="<?php echo htmlspecialchars($basePath, ENT_QUOTES, 'UTF-8'); ?>/modules/dashboard/index.php"
+            class="sidebar-link <?php echo isSidebarActive('/modules/dashboard/') ? 'active' : ''; ?>"
         >
 
             <span class="sidebar-icon">
@@ -151,8 +162,8 @@ $settingsOpen =
              ================================================= -->
 
         <a
-            href="<?php echo htmlspecialchars($basePath); ?>/modules/sales/index.php"
-            class="sidebar-link <?php echo isSidebarActive('/sales/') ? 'active' : ''; ?>"
+            href="<?php echo htmlspecialchars($basePath, ENT_QUOTES, 'UTF-8'); ?>/modules/sales/index.php"
+            class="sidebar-link <?php echo isSidebarActive('/modules/sales/') ? 'active' : ''; ?>"
         >
 
             <span class="sidebar-icon">
@@ -171,8 +182,8 @@ $settingsOpen =
              ================================================= -->
 
         <a
-            href="<?php echo htmlspecialchars($basePath); ?>/modules/inventory/index.php"
-            class="sidebar-link <?php echo isSidebarActive('/inventory/') ? 'active' : ''; ?>"
+            href="<?php echo htmlspecialchars($basePath, ENT_QUOTES, 'UTF-8'); ?>/modules/inventory/index.php"
+            class="sidebar-link <?php echo isSidebarActive('/modules/inventory/') ? 'active' : ''; ?>"
         >
 
             <span class="sidebar-icon">
@@ -192,6 +203,7 @@ $settingsOpen =
 
         <div
             class="sidebar-group <?php echo $productOpen ? 'open' : ''; ?>"
+            id="productManagementGroup"
         >
 
             <button
@@ -200,6 +212,7 @@ $settingsOpen =
                 data-target="productSubmenu"
                 aria-expanded="<?php echo $productOpen ? 'true' : 'false'; ?>"
                 aria-controls="productSubmenu"
+                onclick="toggleSidebarSubmenu(this, 'productSubmenu')"
             >
 
                 <span class="sidebar-icon">
@@ -220,19 +233,24 @@ $settingsOpen =
             <div
                 id="productSubmenu"
                 class="sidebar-submenu"
+                <?php echo $productOpen ? 'style="display: block;"' : 'style="display: none;"'; ?>
             >
 
+                <!-- Product List -->
+
                 <a
-                    href="<?php echo htmlspecialchars($basePath); ?>/modules/products/index.php"
-                    class="sidebar-sublink <?php echo basename($currentPath) === 'index.php' && isSidebarActive('/products/') ? 'active' : ''; ?>"
+                    href="<?php echo htmlspecialchars($basePath, ENT_QUOTES, 'UTF-8'); ?>/modules/products/index.php"
+                    class="sidebar-sublink <?php echo (basename($currentPath) === 'index.php' && isSidebarActive('/modules/products/')) ? 'active' : ''; ?>"
                 >
                     Product List
                 </a>
 
 
+                <!-- Add Product -->
+
                 <a
-                    href="<?php echo htmlspecialchars($basePath); ?>/modules/products/add.php"
-                    class="sidebar-sublink <?php echo basename($currentPath) === 'add.php' && isSidebarActive('/products/') ? 'active' : ''; ?>"
+                    href="<?php echo htmlspecialchars($basePath, ENT_QUOTES, 'UTF-8'); ?>/modules/products/add.php"
+                    class="sidebar-sublink <?php echo (basename($currentPath) === 'add.php' && isSidebarActive('/modules/products/')) ? 'active' : ''; ?>"
                 >
                     Add Product
                 </a>
@@ -244,15 +262,11 @@ $settingsOpen =
 
         <!-- =================================================
              PURCHASES MANAGEMENT
-             
-             IMPORTANT:
-             This is a NORMAL LINK.
-             NO SUBMENU.
              ================================================= -->
 
         <a
-            href="<?php echo htmlspecialchars($basePath); ?>/modules/purchases/index.php"
-            class="sidebar-link <?php echo isSidebarActive('/purchases/') ? 'active' : ''; ?>"
+            href="<?php echo htmlspecialchars($basePath, ENT_QUOTES, 'UTF-8'); ?>/modules/purchases/index.php"
+            class="sidebar-link <?php echo isSidebarActive('/modules/purchases/') ? 'active' : ''; ?>"
         >
 
             <span class="sidebar-icon">
@@ -271,8 +285,8 @@ $settingsOpen =
              ================================================= -->
 
         <a
-            href="<?php echo htmlspecialchars($basePath); ?>/modules/customers/index.php"
-            class="sidebar-link <?php echo isSidebarActive('/customers/') ? 'active' : ''; ?>"
+            href="<?php echo htmlspecialchars($basePath, ENT_QUOTES, 'UTF-8'); ?>/modules/customers/index.php"
+            class="sidebar-link <?php echo isSidebarActive('/modules/customers/') ? 'active' : ''; ?>"
         >
 
             <span class="sidebar-icon">
@@ -291,8 +305,8 @@ $settingsOpen =
              ================================================= -->
 
         <a
-            href="<?php echo htmlspecialchars($basePath); ?>/modules/wholesale_due/index.php"
-            class="sidebar-link <?php echo isSidebarActive('/wholesale_due/') ? 'active' : ''; ?>"
+            href="<?php echo htmlspecialchars($basePath, ENT_QUOTES, 'UTF-8'); ?>/modules/wholesale_due/index.php"
+            class="sidebar-link <?php echo isSidebarActive('/modules/wholesale_due/') ? 'active' : ''; ?>"
         >
 
             <span class="sidebar-icon">
@@ -312,6 +326,7 @@ $settingsOpen =
 
         <div
             class="sidebar-group <?php echo $supplierOpen ? 'open' : ''; ?>"
+            id="supplierManagementGroup"
         >
 
             <button
@@ -320,6 +335,7 @@ $settingsOpen =
                 data-target="supplierSubmenu"
                 aria-expanded="<?php echo $supplierOpen ? 'true' : 'false'; ?>"
                 aria-controls="supplierSubmenu"
+                onclick="toggleSidebarSubmenu(this, 'supplierSubmenu')"
             >
 
                 <span class="sidebar-icon">
@@ -340,11 +356,12 @@ $settingsOpen =
             <div
                 id="supplierSubmenu"
                 class="sidebar-submenu"
+                <?php echo $supplierOpen ? 'style="display: block;"' : 'style="display: none;"'; ?>
             >
 
                 <a
-                    href="<?php echo htmlspecialchars($basePath); ?>/modules/supplier/index.php"
-                    class="sidebar-sublink <?php echo isSidebarActive('/supplier/') ? 'active' : ''; ?>"
+                    href="<?php echo htmlspecialchars($basePath, ENT_QUOTES, 'UTF-8'); ?>/modules/supplier/index.php"
+                    class="sidebar-sublink <?php echo isSidebarActive('/modules/supplier/') ? 'active' : ''; ?>"
                 >
                     Supplier Details &amp; History List
                 </a>
@@ -359,8 +376,8 @@ $settingsOpen =
              ================================================= -->
 
         <a
-            href="<?php echo htmlspecialchars($basePath); ?>/modules/reports/index.php"
-            class="sidebar-link <?php echo isSidebarActive('/reports/') ? 'active' : ''; ?>"
+            href="<?php echo htmlspecialchars($basePath, ENT_QUOTES, 'UTF-8'); ?>/modules/reports/index.php"
+            class="sidebar-link <?php echo isSidebarActive('/modules/reports/') ? 'active' : ''; ?>"
         >
 
             <span class="sidebar-icon">
@@ -380,6 +397,7 @@ $settingsOpen =
 
         <div
             class="sidebar-group <?php echo $settingsOpen ? 'open' : ''; ?>"
+            id="settingsManagementGroup"
         >
 
             <button
@@ -388,6 +406,7 @@ $settingsOpen =
                 data-target="settingsSubmenu"
                 aria-expanded="<?php echo $settingsOpen ? 'true' : 'false'; ?>"
                 aria-controls="settingsSubmenu"
+                onclick="toggleSidebarSubmenu(this, 'settingsSubmenu')"
             >
 
                 <span class="sidebar-icon">
@@ -408,10 +427,11 @@ $settingsOpen =
             <div
                 id="settingsSubmenu"
                 class="sidebar-submenu"
+                <?php echo $settingsOpen ? 'style="display: block;"' : 'style="display: none;"'; ?>
             >
 
                 <a
-                    href="<?php echo htmlspecialchars($basePath); ?>/modules/settings/security.php"
+                    href="<?php echo htmlspecialchars($basePath, ENT_QUOTES, 'UTF-8'); ?>/modules/settings/security.php"
                     class="sidebar-sublink <?php echo basename($currentPath) === 'security.php' ? 'active' : ''; ?>"
                 >
                     Security
@@ -419,7 +439,7 @@ $settingsOpen =
 
 
                 <a
-                    href="<?php echo htmlspecialchars($basePath); ?>/modules/settings/backup_restore.php"
+                    href="<?php echo htmlspecialchars($basePath, ENT_QUOTES, 'UTF-8'); ?>/modules/settings/backup_restore.php"
                     class="sidebar-sublink <?php echo basename($currentPath) === 'backup_restore.php' ? 'active' : ''; ?>"
                 >
                     Backup &amp; Restore
@@ -455,3 +475,86 @@ $settingsOpen =
 
 
 </aside>
+
+
+<!-- =========================================================
+     SIDEBAR DROPDOWN FALLBACK
+     ========================================================= -->
+
+<script>
+
+function toggleSidebarSubmenu(button, submenuId) {
+
+    const submenu = document.getElementById(submenuId);
+
+    if (!submenu) {
+        return;
+    }
+
+    const isOpen = submenu.style.display === 'block';
+
+    /*
+    |--------------------------------------------------------------------------
+    | CLOSE ALL SIDEBAR SUBMENUS
+    |--------------------------------------------------------------------------
+    */
+
+    document.querySelectorAll('.sidebar-submenu').forEach(function(menu) {
+
+        menu.style.display = 'none';
+
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | REMOVE OPEN STATE FROM ALL GROUPS
+    |--------------------------------------------------------------------------
+    */
+
+    document.querySelectorAll('.sidebar-group').forEach(function(group) {
+
+        group.classList.remove('open');
+
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | RESET ALL ARIA STATES
+    |--------------------------------------------------------------------------
+    */
+
+    document.querySelectorAll('.sidebar-toggle').forEach(function(toggle) {
+
+        toggle.setAttribute('aria-expanded', 'false');
+
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | OPEN SELECTED SUBMENU
+    |--------------------------------------------------------------------------
+    */
+
+    if (!isOpen) {
+
+        submenu.style.display = 'block';
+
+        const parentGroup = button.closest('.sidebar-group');
+
+        if (parentGroup) {
+
+            parentGroup.classList.add('open');
+
+        }
+
+        button.setAttribute('aria-expanded', 'true');
+
+    }
+
+}
+
+</script>
+```
