@@ -1,12 +1,77 @@
 <?php
 
-session_start();
+/*
+|--------------------------------------------------------------------------
+| SECURE SESSION SETTINGS
+|--------------------------------------------------------------------------
+*/
+
+if (session_status() !== PHP_SESSION_ACTIVE) {
+
+    ini_set('session.use_strict_mode', '1');
+
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/',
+        'domain' => '',
+        'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
+
+    session_start();
+}
 
 require_once "config/database.php";
 
 $error = "";
 
+
+/*
+|--------------------------------------------------------------------------
+| ALREADY LOGGED IN
+|--------------------------------------------------------------------------
+*/
+
+if (!empty($_SESSION["user_id"])) {
+
+    header("Location: /grocery-shop/modules/dashboard/index.php");
+    exit;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| LOGIN CSRF TOKEN
+|--------------------------------------------------------------------------
+*/
+
+if (
+    empty($_SESSION["login_csrf_token"]) ||
+    !is_string($_SESSION["login_csrf_token"])
+) {
+    $_SESSION["login_csrf_token"] = bin2hex(random_bytes(32));
+}
+
+$loginCsrfToken = $_SESSION["login_csrf_token"];
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    $submittedToken =
+        (string) ($_POST["csrf_token"] ?? "");
+
+    if (
+        $submittedToken === "" ||
+        !hash_equals(
+            $loginCsrfToken,
+            $submittedToken
+        )
+    ) {
+
+        $error =
+            "Your login form expired. Please refresh the page and try again.";
+
+    } else {
 
     $username = trim($_POST["username"] ?? "");
     $password = $_POST["password"] ?? "";
@@ -42,12 +107,22 @@ if ($stmt) {
 
                 } elseif (password_verify($password, $user["password"])) {
 
-                    $_SESSION["user_id"] = $user["user_id"];
+                    /*
+                    |--------------------------------------------------------------------------
+                    | PREVENT SESSION FIXATION
+                    |--------------------------------------------------------------------------
+                    */
+
+                    session_regenerate_id(true);
+
+                    $_SESSION["user_id"] = (int) $user["user_id"];
                     $_SESSION["full_name"] = $user["full_name"];
                     $_SESSION["username"] = $user["username"];
                     $_SESSION["role"] = $user["role"];
 
-                    header("Location: modules/dashboard/index.php");
+                    unset($_SESSION["login_csrf_token"]);
+
+                    header("Location: /grocery-shop/modules/dashboard/index.php");
                     exit;
 
                 } else {
@@ -69,6 +144,7 @@ if ($stmt) {
             $error = "Database query could not be prepared.";
         }
     }
+}
 }
 
 ?>
@@ -250,6 +326,16 @@ if ($stmt) {
                     method="POST"
                     class="login-form"
                 >
+
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="<?php echo htmlspecialchars(
+                            $loginCsrfToken,
+                            ENT_QUOTES,
+                            'UTF-8'
+                        ); ?>"
+                    >
 
 
                     <!-- Email Address -->

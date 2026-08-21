@@ -1,0 +1,1565 @@
+/* =========================================================
+   GrocerEase - Wholesale Due Management
+   Part 2: High-Fidelity Styling
+   ========================================================= */
+
+:root {
+    --wholesale-bg: #f5f8fc;
+    --wholesale-card: #ffffff;
+    --wholesale-text: #111827;
+    --wholesale-muted: #64748b;
+    --wholesale-border: #dfe5ec;
+    --wholesale-blue: #2563eb;
+    --wholesale-green: #169447;
+    --wholesale-red: #e32727;
+    --wholesale-orange: #ea580c;
+}
+
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+
+.wholesale-page {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 38px 42px 58px;
+    box-sizing: border-box;
+
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    color: var(--wholesale-text);
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+
+/* =========================================================
+   HEADING
+   ========================================================= */
+
+.wholesale-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.wholesale-heading h1 {
+    margin: 0;
+
+    color: #101827;
+
+    font-size: 31px;
+    line-height: 1.15;
+    font-weight: 750;
+    letter-spacing: -0.7px;
+}
+
+.wholesale-heading p {
+    margin: 5px 0 0;
+
+    color: #6b7b93;
+
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   KPI GRID
+   ========================================================= */
+
+.wholesale-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+
+    margin-top: 32px;
+}
+
+.wholesale-kpi-card {
+    min-height: 112px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 22px 20px;
+
+    box-sizing: border-box;
+
+    border: 1px solid var(--wholesale-border);
+    border-radius: 16px;
+
+    background: var(--wholesale-card);
+
+    box-shadow:
+        0 1px 2px rgba(15, 23, 42, 0.02);
+}
+
+.wholesale-kpi-card > span {
+    color: #1f2937;
+
+    font-size: 13px;
+    font-weight: 650;
+    line-height: 1.35;
+}
+
+.wholesale-kpi-card > strong {
+    display: block;
+
+    margin-top: 12px;
+
+    font-size: 28px;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.wholesale-kpi-card.due-card > strong {
+    color: #dc2626;
+}
+
+.wholesale-kpi-card.customers-card > strong {
+    color: #2563eb;
+}
+
+.wholesale-kpi-card.collected-card > strong {
+    color: #159447;
+}
+
+.wholesale-kpi-card.overdue-card > strong {
+    color: #ea580c;
+}
+
+
+/* =========================================================
+   TOOLBAR
+   ========================================================= */
+
+.wholesale-toolbar {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    margin-top: 28px;
+}
+
+.wholesale-toolbar > div:first-child {
+    flex: 0 1 300px;
+    min-width: 220px;
+}
+
+.wholesale-toolbar > div:nth-child(2) {
+    flex: 0 0 175px;
+}
+
+.wholesale-search-field {
+    position: relative;
+    width: 100%;
+}
+
+.wholesale-search-icon {
+    position: absolute;
+
+    right: 14px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #172033;
+
+    font-size: 21px;
+    font-weight: 700;
+
+    pointer-events: none;
+}
+
+.wholesale-toolbar input[type="search"],
+.wholesale-toolbar select {
+    height: 46px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #cfd6df;
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    color: #1f2937;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.wholesale-toolbar input[type="search"] {
+    width: 100%;
+
+    padding: 0 45px 0 16px;
+}
+
+.wholesale-toolbar select {
+    width: 100%;
+
+    padding: 0 38px 0 15px;
+
+    cursor: pointer;
+}
+
+.wholesale-toolbar input[type="search"]::placeholder {
+    color: #9aa3b2;
+}
+
+.wholesale-toolbar input[type="search"]:focus,
+.wholesale-toolbar select:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.08);
+}
+
+
+/*
+   Keep search usable without adding a visible button that is absent
+   from the high-fidelity design. Pressing Enter in the search box
+   submits the form.
+*/
+.wholesale-search-submit {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    padding: 0;
+    margin: -1px;
+
+    border: 0;
+
+    overflow: hidden;
+
+    clip: rect(0 0 0 0);
+}
+
+.wholesale-clear-filter {
+    min-height: 42px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 13px;
+
+    border-radius: 9px;
+
+    color: #64748b;
+
+    font-size: 13px;
+    font-weight: 650;
+
+    text-decoration: none;
+}
+
+.wholesale-clear-filter:hover {
+    background: #eef2f7;
+
+    color: #334155;
+}
+
+.wholesale-collect-main {
+    min-width: 200px;
+    height: 46px;
+
+    margin-left: auto;
+
+    padding: 0 20px;
+
+    border: 0;
+    border-radius: 10px;
+
+    background: #159447;
+
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 4px 10px rgba(21, 148, 71, 0.14);
+
+    transition:
+        background-color 0.18s ease,
+        transform 0.18s ease,
+        opacity 0.18s ease;
+}
+
+.wholesale-collect-main:hover:not(:disabled) {
+    background: #11833e;
+
+    transform: translateY(-1px);
+}
+
+.wholesale-collect-main:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   TABLE CARD
+   ========================================================= */
+
+.wholesale-table-section {
+    margin-top: 24px;
+}
+
+.wholesale-table-wrapper {
+    width: 100%;
+    min-height: 365px;
+
+    overflow-x: auto;
+
+    box-sizing: border-box;
+
+    border: 1px solid #dfe5ec;
+    border-radius: 14px;
+
+    background: #ffffff;
+}
+
+.wholesale-table {
+    width: 100%;
+    min-width: 850px;
+
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.wholesale-table th {
+    padding: 14px 18px;
+
+    border-bottom: 1px solid #dfe5ec;
+
+    background: #ffffff;
+
+    color: #7b8190;
+
+    font-size: 12px;
+    font-weight: 650;
+    line-height: 1.3;
+
+    text-align: left;
+    white-space: nowrap;
+}
+
+.wholesale-table td {
+    padding: 10px 18px;
+
+    border-bottom: 1px solid #e8edf2;
+
+    color: #111827;
+
+    font-size: 13px;
+    line-height: 1.4;
+
+    vertical-align: middle;
+}
+
+.wholesale-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.wholesale-table tbody tr:hover {
+    background: #fbfdff;
+}
+
+.wholesale-table td:first-child strong {
+    display: block;
+
+    color: #111827;
+
+    font-size: 13px;
+    font-weight: 650;
+}
+
+.wholesale-table td:first-child small {
+    display: inline-block;
+
+    margin-top: 4px;
+
+    color: #dc2626;
+
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.wholesale-table th:nth-child(1),
+.wholesale-table td:nth-child(1) {
+    width: 24%;
+}
+
+.wholesale-table th:nth-child(2),
+.wholesale-table td:nth-child(2) {
+    width: 16%;
+}
+
+.wholesale-table th:nth-child(3),
+.wholesale-table td:nth-child(3) {
+    width: 16%;
+}
+
+.wholesale-table th:nth-child(4),
+.wholesale-table td:nth-child(4) {
+    width: 16%;
+}
+
+.wholesale-table th:nth-child(5),
+.wholesale-table td:nth-child(5) {
+    width: 13%;
+}
+
+.wholesale-table th:nth-child(6),
+.wholesale-table td:nth-child(6) {
+    width: 15%;
+}
+
+
+/* =========================================================
+   STATUS BADGES
+   ========================================================= */
+
+.wholesale-status-badge {
+    min-width: 72px;
+    min-height: 28px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    padding: 5px 10px;
+
+    border-radius: 7px;
+
+    font-size: 12px;
+    font-weight: 650;
+    line-height: 1;
+}
+
+.wholesale-status-badge.status-pending {
+    background: #fff1bd;
+
+    color: #a45b00;
+}
+
+.wholesale-status-badge.status-partial {
+    background: #dbeafe;
+
+    color: #1d4ed8;
+}
+
+.wholesale-status-badge.status-overdue {
+    background: #fee2e2;
+
+    color: #dc2626;
+}
+
+
+/* =========================================================
+   TABLE ACTIONS
+   ========================================================= */
+
+.wholesale-table td:last-child {
+    white-space: nowrap;
+}
+
+.wholesale-action-button {
+    min-width: 78px;
+    height: 34px;
+
+    padding: 0 13px;
+
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.18s ease,
+        color 0.18s ease,
+        border-color 0.18s ease;
+}
+
+.wholesale-action-button + .wholesale-action-button {
+    margin-left: 6px;
+}
+
+.wholesale-action-button.history {
+    border: 1px solid #aeb7c4;
+
+    background: #ffffff;
+
+    color: #1682e8;
+}
+
+.wholesale-action-button.collect {
+    border: 1px solid #22c55e;
+
+    background: #22c55e;
+
+    color: #ffffff;
+}
+
+.wholesale-action-button.history:hover:not(:disabled) {
+    border-color: #2563eb;
+
+    background: #eff6ff;
+
+    color: #1d4ed8;
+}
+
+.wholesale-action-button.collect:hover:not(:disabled) {
+    border-color: #16a34a;
+
+    background: #16a34a;
+}
+
+/*
+   Actions are intentionally disabled in Part 2. They keep the
+   high-fidelity appearance so the layout does not change later.
+*/
+.wholesale-action-button:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.58;
+}
+
+
+/* =========================================================
+   EMPTY TABLE STATE
+   ========================================================= */
+
+.wholesale-table tbody td[colspan] {
+    height: 230px;
+
+    text-align: center;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   RECENT PAYMENT PANEL
+   ========================================================= */
+
+.wholesale-recent-payment {
+    margin-top: 22px;
+
+    padding: 18px 20px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #9cc8ff;
+    border-radius: 14px;
+
+    background: #eff6ff;
+}
+
+.wholesale-recent-payment h2 {
+    margin: 0 0 7px;
+
+    color: #111827;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.wholesale-recent-payment p {
+    margin: 0;
+
+    color: #274899;
+
+    font-size: 13px;
+    font-weight: 550;
+    line-height: 1.45;
+}
+
+.wholesale-recent-payment p strong {
+    color: #24449a;
+}
+
+
+/* =========================================================
+   TEMPORARY DEVELOPMENT NOTE
+   ========================================================= */
+
+.wholesale-development-note {
+    margin-top: 10px;
+
+    text-align: right;
+}
+
+.wholesale-development-note small {
+    color: #94a3b8;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   RESPONSIVE - TABLET
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .wholesale-page {
+        padding-left: 28px;
+        padding-right: 28px;
+    }
+
+    .wholesale-kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .wholesale-toolbar {
+        flex-wrap: wrap;
+    }
+
+    .wholesale-collect-main {
+        margin-left: 0;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .wholesale-page {
+        padding: 26px 16px 42px;
+    }
+
+    .wholesale-heading h1 {
+        font-size: 26px;
+    }
+
+    .wholesale-kpi-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+
+        margin-top: 24px;
+    }
+
+    .wholesale-kpi-card {
+        min-height: 98px;
+    }
+
+    .wholesale-toolbar {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .wholesale-toolbar > div:first-child,
+    .wholesale-toolbar > div:nth-child(2) {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .wholesale-collect-main {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .wholesale-clear-filter {
+        width: 100%;
+
+        box-sizing: border-box;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    .wholesale-heading h1 {
+        font-size: 23px;
+    }
+
+    .wholesale-kpi-card > strong {
+        font-size: 25px;
+    }
+
+}
+
+
+/* =========================================================
+   PART 3 - CUSTOMER DUE HISTORY
+   ========================================================= */
+
+.wholesale-history-page {
+    padding-bottom: 70px;
+}
+
+.wholesale-history-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.wholesale-history-heading h1 {
+    margin: 8px 0 0;
+
+    color: #101827;
+
+    font-size: 31px;
+    line-height: 1.15;
+    font-weight: 750;
+    letter-spacing: -0.7px;
+}
+
+.wholesale-history-heading p {
+    margin: 5px 0 0;
+
+    color: #6b7b93;
+
+    font-size: 14px;
+}
+
+.wholesale-back-link {
+    display: inline-flex;
+    align-items: center;
+
+    color: #2563eb;
+
+    font-size: 13px;
+    font-weight: 650;
+
+    text-decoration: none;
+}
+
+.wholesale-back-link:hover {
+    text-decoration: underline;
+}
+
+
+/* Customer profile */
+
+.wholesale-history-customer-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+
+    margin-top: 28px;
+    padding: 22px 24px;
+
+    border: 1px solid #dfe5ec;
+    border-radius: 16px;
+
+    background: #ffffff;
+}
+
+.wholesale-history-customer-main {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.wholesale-history-avatar {
+    width: 52px;
+    height: 52px;
+
+    flex: 0 0 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #dbeafe;
+
+    color: #2563eb;
+
+    font-size: 20px;
+    font-weight: 750;
+}
+
+.wholesale-history-name-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.wholesale-history-name-row h2 {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 19px;
+    font-weight: 750;
+}
+
+.wholesale-account-badge {
+    min-height: 25px;
+
+    display: inline-flex;
+    align-items: center;
+
+    padding: 4px 9px;
+
+    border-radius: 999px;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.wholesale-account-badge.active {
+    background: #dcfce7;
+
+    color: #15803d;
+}
+
+.wholesale-account-badge.inactive {
+    background: #fee2e2;
+
+    color: #dc2626;
+}
+
+.wholesale-history-contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+
+    margin-top: 7px;
+
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+.wholesale-history-customer-meta {
+    min-width: 125px;
+
+    text-align: right;
+}
+
+.wholesale-history-customer-meta span {
+    display: block;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+.wholesale-history-customer-meta strong {
+    display: block;
+
+    margin-top: 5px;
+
+    color: #334155;
+
+    font-size: 13px;
+}
+
+
+/* Summary cards */
+
+.wholesale-history-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+
+    margin-top: 20px;
+}
+
+.wholesale-history-summary-card {
+    min-height: 104px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 19px 20px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #dfe5ec;
+    border-radius: 14px;
+
+    background: #ffffff;
+}
+
+.wholesale-history-summary-card span {
+    color: #64748b;
+
+    font-size: 12px;
+    font-weight: 650;
+}
+
+.wholesale-history-summary-card strong {
+    display: block;
+
+    margin-top: 10px;
+
+    color: #111827;
+
+    font-size: 23px;
+    font-weight: 750;
+}
+
+.wholesale-history-summary-card.current-due strong {
+    color: #dc2626;
+}
+
+.wholesale-history-summary-card.opening-due strong {
+    color: #ea580c;
+}
+
+.wholesale-history-summary-card small {
+    display: block;
+
+    margin-top: 5px;
+
+    color: #dc2626;
+
+    font-size: 10px;
+    font-weight: 650;
+}
+
+
+/* History sections */
+
+.wholesale-history-section {
+    margin-top: 24px;
+
+    border: 1px solid #dfe5ec;
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    overflow: hidden;
+}
+
+.wholesale-history-section-heading {
+    min-height: 72px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    padding: 15px 20px;
+
+    box-sizing: border-box;
+
+    border-bottom: 1px solid #e5eaf0;
+}
+
+.wholesale-history-section-heading h2 {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 16px;
+    font-weight: 750;
+}
+
+.wholesale-history-section-heading p {
+    margin: 4px 0 0;
+
+    color: #7c8a9f;
+
+    font-size: 12px;
+}
+
+.wholesale-history-section-total {
+    text-align: right;
+}
+
+.wholesale-history-section-total span {
+    display: block;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+}
+
+.wholesale-history-section-total strong {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #15803d;
+
+    font-size: 16px;
+}
+
+
+/* History tables */
+
+.wholesale-history-table-wrapper {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+.wholesale-history-table {
+    width: 100%;
+    min-width: 900px;
+
+    border-collapse: collapse;
+}
+
+.wholesale-history-table.payment-table {
+    min-width: 760px;
+}
+
+.wholesale-history-table th {
+    padding: 13px 18px;
+
+    border-bottom: 1px solid #e5eaf0;
+
+    background: #f8fafc;
+
+    color: #7b8190;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    text-align: left;
+    white-space: nowrap;
+}
+
+.wholesale-history-table td {
+    padding: 13px 18px;
+
+    border-bottom: 1px solid #edf1f5;
+
+    color: #334155;
+
+    font-size: 12px;
+
+    vertical-align: middle;
+}
+
+.wholesale-history-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.wholesale-history-table tbody tr:hover {
+    background: #fbfdff;
+}
+
+.wholesale-history-table td strong {
+    color: #111827;
+}
+
+.wholesale-history-empty {
+    height: 140px;
+
+    color: #94a3b8 !important;
+
+    text-align: center;
+}
+
+
+/* Info note */
+
+.wholesale-history-note {
+    margin-top: 18px;
+    padding: 13px 16px;
+
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+
+    background: #eff6ff;
+
+    color: #475569;
+
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.wholesale-history-note strong {
+    color: #1d4ed8;
+}
+
+
+/* Make the History anchor look exactly like the action button */
+
+a.wholesale-action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    text-decoration: none;
+}
+
+
+/* Paid badge used by invoice history */
+
+.wholesale-status-badge.status-paid {
+    background: #dcfce7;
+
+    color: #15803d;
+}
+
+
+/* =========================================================
+   PART 3 RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .wholesale-history-summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .wholesale-history-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .wholesale-history-heading .wholesale-collect-main {
+        width: 100%;
+    }
+
+    .wholesale-history-customer-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .wholesale-history-customer-meta {
+        text-align: left;
+    }
+
+    .wholesale-history-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .wholesale-history-section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .wholesale-history-section-total {
+        text-align: left;
+    }
+
+}
+
+
+/* =========================================================
+   PART 4 - COLLECT PAYMENT MODAL
+   ========================================================= */
+
+body.wholesale-modal-open {
+    overflow: hidden;
+}
+
+.wholesale-payment-modal[hidden] {
+    display: none !important;
+}
+
+.wholesale-payment-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 24px;
+
+    box-sizing: border-box;
+}
+
+.wholesale-payment-modal-backdrop {
+    position: absolute;
+    inset: 0;
+
+    background: rgba(15, 23, 42, 0.48);
+
+    backdrop-filter: blur(2px);
+}
+
+.wholesale-payment-dialog {
+    position: relative;
+    z-index: 1;
+
+    width: 100%;
+    max-width: 520px;
+    max-height: calc(100vh - 48px);
+
+    overflow-y: auto;
+
+    border: 1px solid #dbe2ea;
+    border-radius: 18px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 24px 60px rgba(15, 23, 42, 0.22);
+}
+
+.wholesale-payment-dialog-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+
+    padding: 22px 24px 18px;
+
+    border-bottom: 1px solid #e7ebf0;
+}
+
+.wholesale-payment-dialog-header h2 {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 20px;
+    font-weight: 750;
+}
+
+.wholesale-payment-dialog-header p {
+    margin: 4px 0 0;
+
+    color: #718096;
+
+    font-size: 12px;
+}
+
+.wholesale-payment-close {
+    width: 34px;
+    height: 34px;
+
+    flex: 0 0 34px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid #dbe2ea;
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: #64748b;
+
+    font-size: 23px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.wholesale-payment-close:hover {
+    background: #f8fafc;
+
+    color: #111827;
+}
+
+.wholesale-payment-form {
+    padding: 22px 24px 24px;
+}
+
+.wholesale-payment-field {
+    margin-bottom: 16px;
+}
+
+.wholesale-payment-field label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #334155;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.wholesale-payment-field label span {
+    color: #94a3b8;
+
+    font-weight: 500;
+}
+
+.wholesale-payment-field input,
+.wholesale-payment-field select,
+.wholesale-payment-field textarea {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    border: 1px solid #cfd8e3;
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    color: #1f2937;
+
+    font-family: inherit;
+    font-size: 13px;
+
+    outline: none;
+
+    transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.wholesale-payment-field input,
+.wholesale-payment-field select {
+    height: 44px;
+
+    padding: 0 13px;
+}
+
+.wholesale-payment-field textarea {
+    min-height: 86px;
+
+    padding: 11px 13px;
+
+    resize: vertical;
+}
+
+.wholesale-payment-field input:focus,
+.wholesale-payment-field select:focus,
+.wholesale-payment-field textarea:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.08);
+}
+
+.wholesale-payment-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.wholesale-payment-due-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    margin-bottom: 18px;
+    padding: 13px 15px;
+
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+
+    background: #fff7f7;
+}
+
+.wholesale-payment-due-box span {
+    color: #64748b;
+
+    font-size: 12px;
+    font-weight: 650;
+}
+
+.wholesale-payment-due-box strong {
+    color: #dc2626;
+
+    font-size: 18px;
+    font-weight: 750;
+}
+
+.wholesale-payment-message {
+    display: none;
+
+    margin: 4px 0 16px;
+    padding: 11px 12px;
+
+    border-radius: 9px;
+
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.wholesale-payment-message.visible {
+    display: block;
+}
+
+.wholesale-payment-message.error {
+    border: 1px solid #fecaca;
+
+    background: #fef2f2;
+
+    color: #b91c1c;
+}
+
+.wholesale-payment-message.success {
+    border: 1px solid #bbf7d0;
+
+    background: #f0fdf4;
+
+    color: #15803d;
+}
+
+.wholesale-payment-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+
+    margin-top: 4px;
+}
+
+.wholesale-payment-cancel,
+.wholesale-payment-submit {
+    min-width: 120px;
+    height: 42px;
+
+    padding: 0 17px;
+
+    border-radius: 9px;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.wholesale-payment-cancel {
+    border: 1px solid #cbd5e1;
+
+    background: #ffffff;
+
+    color: #475569;
+}
+
+.wholesale-payment-cancel:hover {
+    background: #f8fafc;
+}
+
+.wholesale-payment-submit {
+    border: 1px solid #159447;
+
+    background: #159447;
+
+    color: #ffffff;
+}
+
+.wholesale-payment-submit:hover:not(:disabled) {
+    border-color: #11833e;
+
+    background: #11833e;
+}
+
+.wholesale-payment-submit:disabled {
+    opacity: 0.62;
+
+    cursor: wait;
+}
+
+
+/* History payment table gained Reference and Type columns. */
+.wholesale-history-table.payment-table {
+    min-width: 980px;
+}
+
+
+/* =========================================================
+   PART 4 RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 620px) {
+
+    .wholesale-payment-modal {
+        align-items: flex-end;
+
+        padding: 12px;
+    }
+
+    .wholesale-payment-dialog {
+        max-height: calc(100vh - 24px);
+
+        border-radius: 16px;
+    }
+
+    .wholesale-payment-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .wholesale-payment-dialog-header,
+    .wholesale-payment-form {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .wholesale-payment-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .wholesale-payment-cancel,
+    .wholesale-payment-submit {
+        width: 100%;
+        min-width: 0;
+    }
+
+}

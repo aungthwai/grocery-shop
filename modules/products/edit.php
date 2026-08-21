@@ -29,6 +29,16 @@ if (!isset($_SESSION['user_id'])) {
 |--------------------------------------------------------------------------
 */
 
+/*
+|--------------------------------------------------------------------------
+| ADMIN ACCESS
+|--------------------------------------------------------------------------
+*/
+
+require_once "../../includes/role_guard.php";
+grocerEaseRequireAdmin();
+
+
 require_once "../../config/database.php";
 
 /*
@@ -39,6 +49,21 @@ require_once "../../config/database.php";
 
 $basePath = "/grocery-shop";
 $pageTitle = "Edit Product";
+
+/*
+|--------------------------------------------------------------------------
+| PRODUCT CSRF TOKEN
+|--------------------------------------------------------------------------
+*/
+
+if (
+    empty($_SESSION['product_csrf_token']) ||
+    !is_string($_SESSION['product_csrf_token'])
+) {
+    $_SESSION['product_csrf_token'] = bin2hex(random_bytes(32));
+}
+
+$productCsrfToken = $_SESSION['product_csrf_token'];
 
 /*
 |--------------------------------------------------------------------------
@@ -80,6 +105,7 @@ $loadProductStmt = mysqli_prepare(
             selling_price,
             stock,
             minimum_stock,
+            expiry_date,
             image,
             status
         FROM products
@@ -122,6 +148,7 @@ $purchasePrice = (string) $product['purchase_price'];
 $sellingPrice = (string) $product['selling_price'];
 $stock = (string) $product['stock'];
 $minimumStock = (string) $product['minimum_stock'];
+$expiryDate = (string) ($product['expiry_date'] ?? '');
 $status = (string) $product['status'];
 $imageValue = $product['image'] ?? null;
 
@@ -235,6 +262,17 @@ if ($supplierResult) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+    $submittedCsrfToken =
+        (string) ($_POST['csrf_token'] ?? '');
+
+    if (
+        $submittedCsrfToken === '' ||
+        !hash_equals($productCsrfToken, $submittedCsrfToken)
+    ) {
+        $errors[] =
+            'Your form session expired. Please refresh the page and try again.';
+    }
+
     $productName = trim($_POST['product_name'] ?? '');
 
     $categoryIdValue = filter_input(
@@ -253,6 +291,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $unit = trim($_POST['unit'] ?? '');
     $purchasePrice = trim($_POST['purchase_price'] ?? '');
     $sellingPrice = trim($_POST['selling_price'] ?? '');
+    $expiryDate = trim($_POST['expiry_date'] ?? '');
 
     $stockValue = filter_input(
         INPUT_POST,
@@ -321,6 +360,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = 'Selling price must be a valid number.';
     } elseif ((float) $sellingPrice < 0) {
         $errors[] = 'Selling price cannot be negative.';
+    }
+
+    if ($expiryDate !== '') {
+
+        $expiryObject =
+            DateTime::createFromFormat(
+                'Y-m-d',
+                $expiryDate
+            );
+
+        if (
+            !$expiryObject ||
+            $expiryObject->format('Y-m-d') !==
+                $expiryDate
+        ) {
+            $errors[] =
+                'Please enter a valid expiry date.';
+        }
     }
 
     if (
@@ -657,6 +714,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     selling_price = ?,
                     stock = ?,
                     minimum_stock = ?,
+                    expiry_date = NULLIF(?, ''),
                     image = ?,
                     status = ?
                 WHERE product_id = ?
@@ -672,7 +730,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             mysqli_stmt_bind_param(
                 $updateStmt,
-                "iisssddiissi",
+                "iisssddiisssi",
                 $categoryId,
                 $supplierDbValue,
                 $productName,
@@ -682,6 +740,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $sellingPriceValue,
                 $stockInt,
                 $minimumStockInt,
+                $expiryDate,
                 $imageValue,
                 $status,
                 $productId
@@ -1036,6 +1095,12 @@ require_once "../../includes/header.php";
                         novalidate
                     >
 
+                        <input
+                            type="hidden"
+                            name="csrf_token"
+                            value="<?php echo e($productCsrfToken); ?>"
+                        >
+
                         <div class="edit-product-grid">
 
                             <div class="edit-product-field full-width">
@@ -1233,6 +1298,25 @@ require_once "../../includes/header.php";
                                     required
                                     value="<?php echo e($minimumStock); ?>"
                                 >
+
+                            </div>
+
+                            <div class="edit-product-field">
+
+                                <label for="expiry_date">
+                                    Expiry Date
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="expiry_date"
+                                    name="expiry_date"
+                                    value="<?php echo e($expiryDate); ?>"
+                                >
+
+                                <p class="edit-product-help">
+                                    Optional. Leave blank for products without an expiry date.
+                                </p>
 
                             </div>
 

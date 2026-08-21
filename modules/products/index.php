@@ -32,6 +32,16 @@ if (!isset($_SESSION['user_id'])) {
 |--------------------------------------------------------------------------
 */
 
+/*
+|--------------------------------------------------------------------------
+| ADMIN ACCESS
+|--------------------------------------------------------------------------
+*/
+
+require_once "../../includes/role_guard.php";
+grocerEaseRequireAdmin();
+
+
 require_once "../../config/database.php";
 
 
@@ -55,6 +65,44 @@ $basePath = "/grocery-shop";
 */
 
 $pageTitle = "Product List";
+
+/*
+|--------------------------------------------------------------------------
+| PRODUCT CSRF TOKEN
+|--------------------------------------------------------------------------
+*/
+
+if (
+    empty($_SESSION['product_csrf_token']) ||
+    !is_string($_SESSION['product_csrf_token'])
+) {
+    $_SESSION['product_csrf_token'] = bin2hex(random_bytes(32));
+}
+
+$productCsrfToken = $_SESSION['product_csrf_token'];
+
+
+/*
+|--------------------------------------------------------------------------
+| PRODUCT ACTION MESSAGE
+|--------------------------------------------------------------------------
+*/
+
+$productActionMessage = '';
+$productActionClass = '';
+
+if (isset($_GET['deleted']) && $_GET['deleted'] === '1') {
+    $productActionMessage = 'Product deleted successfully.';
+    $productActionClass = 'success';
+} elseif (isset($_GET['delete_blocked']) && $_GET['delete_blocked'] === '1') {
+    $productActionMessage =
+        'This product has sales or purchase history, so it cannot be deleted. Mark it Inactive instead.';
+    $productActionClass = 'warning';
+} elseif (isset($_GET['delete_error']) && $_GET['delete_error'] === '1') {
+    $productActionMessage =
+        'Unable to delete the product. Please try again.';
+    $productActionClass = 'error';
+}
 
 
 /*
@@ -935,6 +983,47 @@ require_once "../../includes/header.php";
     }
 
 
+    .products-page .delete-action {
+        border-color: #fecaca;
+        background: #fff5f5;
+        color: #dc2626;
+    }
+
+    .products-page .delete-action:hover {
+        background: #fee2e2;
+        border-color: #fca5a5;
+    }
+
+    .products-page .delete-form {
+        margin: 0;
+        display: inline-flex;
+    }
+
+    .products-page .product-action-message {
+        margin-bottom: 18px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+    .products-page .product-action-message.success {
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
+        color: #047857;
+    }
+
+    .products-page .product-action-message.warning {
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        color: #92400e;
+    }
+
+    .products-page .product-action-message.error {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #b91c1c;
+    }
+
     .products-page .edit-action {
 
         color: #2563eb;
@@ -1126,6 +1215,17 @@ require_once "../../includes/header.php";
 
 
             <div class="products-page">
+
+                    <?php if ($productActionMessage !== ''): ?>
+
+                        <div
+                            class="product-action-message <?php echo e($productActionClass); ?>"
+                            role="status"
+                        >
+                            <?php echo e($productActionMessage); ?>
+                        </div>
+
+                    <?php endif; ?>
 
 
                 <!-- =================================================
@@ -1710,6 +1810,33 @@ require_once "../../includes/header.php";
                                                 >
                                                     View
                                                 </a>
+
+
+                                                <form
+                                                    method="POST"
+                                                    action="<?php echo $basePath; ?>/modules/products/delete.php"
+                                                    class="delete-form"
+                                                    onsubmit="return confirm('Delete this product? Products with sales or purchase history cannot be deleted.');"
+                                                >
+                                                    <input
+                                                        type="hidden"
+                                                        name="csrf_token"
+                                                        value="<?php echo e($productCsrfToken); ?>"
+                                                    >
+
+                                                    <input
+                                                        type="hidden"
+                                                        name="product_id"
+                                                        value="<?php echo (int) $product['product_id']; ?>"
+                                                    >
+
+                                                    <button
+                                                        type="submit"
+                                                        class="action-button delete-action"
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </form>
 
 
                                             </div>

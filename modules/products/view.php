@@ -28,6 +28,16 @@ if (!isset($_SESSION['user_id'])) {
 |--------------------------------------------------------------------------
 */
 
+/*
+|--------------------------------------------------------------------------
+| ADMIN ACCESS
+|--------------------------------------------------------------------------
+*/
+
+require_once "../../includes/role_guard.php";
+grocerEaseRequireAdmin();
+
+
 require_once "../../config/database.php";
 
 /*
@@ -79,6 +89,7 @@ $loadProductStmt = mysqli_prepare(
             p.selling_price,
             p.stock,
             p.minimum_stock,
+            p.expiry_date,
             p.image,
             p.status,
             p.created_at,
@@ -486,6 +497,20 @@ require_once "../../includes/header.php";
                                 <div class="view-product-value">
                                     <?php echo number_format($minimumStock); ?>
                                     <?php echo e($product['unit']); ?>
+                                </div>
+                            </div>
+
+                            <div class="view-product-field">
+                                <span class="view-product-label">Expiry Date</span>
+                                <div class="view-product-value">
+                                    <?php
+                                    echo !empty($product['expiry_date'])
+                                        ? e(date(
+                                            'd M Y',
+                                            strtotime($product['expiry_date'])
+                                        ))
+                                        : '—';
+                                    ?>
                                 </div>
                             </div>
 

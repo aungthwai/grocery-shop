@@ -84,10 +84,23 @@ $productOpen =
     isSidebarActive('/modules/products/');
 
 $supplierOpen =
-    isSidebarActive('/modules/supplier/');
+    isSidebarActive('/modules/suppliers/');
 
 $settingsOpen =
     isSidebarActive('/modules/settings/');
+
+
+/*
+|--------------------------------------------------------------------------
+| ROLE-BASED NAVIGATION
+|--------------------------------------------------------------------------
+| Admin = full management navigation
+| Staff = cashier navigation (Dashboard + Record Sale)
+|--------------------------------------------------------------------------
+*/
+
+$isAdmin =
+    (string) ($_SESSION['role'] ?? '') === 'Admin';
 
 ?>
 
@@ -177,6 +190,8 @@ $settingsOpen =
         </a>
 
 
+        <?php if ($isAdmin): ?>
+
         <!-- =================================================
              INVENTORY
              ================================================= -->
@@ -212,7 +227,7 @@ $settingsOpen =
                 data-target="productSubmenu"
                 aria-expanded="<?php echo $productOpen ? 'true' : 'false'; ?>"
                 aria-controls="productSubmenu"
-                onclick="toggleSidebarSubmenu(this, 'productSubmenu')"
+                onclick="return GrocerEaseSidebarDropdown.toggle(event, this, 'productSubmenu')"
             >
 
                 <span class="sidebar-icon">
@@ -305,8 +320,8 @@ $settingsOpen =
              ================================================= -->
 
         <a
-            href="<?php echo htmlspecialchars($basePath, ENT_QUOTES, 'UTF-8'); ?>/modules/wholesale_due/index.php"
-            class="sidebar-link <?php echo isSidebarActive('/modules/wholesale_due/') ? 'active' : ''; ?>"
+            href="<?php echo htmlspecialchars($basePath, ENT_QUOTES, 'UTF-8'); ?>/modules/wholesale/index.php"
+            class="sidebar-link <?php echo isSidebarActive('/modules/wholesale/') ? 'active' : ''; ?>"
         >
 
             <span class="sidebar-icon">
@@ -335,7 +350,7 @@ $settingsOpen =
                 data-target="supplierSubmenu"
                 aria-expanded="<?php echo $supplierOpen ? 'true' : 'false'; ?>"
                 aria-controls="supplierSubmenu"
-                onclick="toggleSidebarSubmenu(this, 'supplierSubmenu')"
+                onclick="return GrocerEaseSidebarDropdown.toggle(event, this, 'supplierSubmenu')"
             >
 
                 <span class="sidebar-icon">
@@ -360,8 +375,8 @@ $settingsOpen =
             >
 
                 <a
-                    href="<?php echo htmlspecialchars($basePath, ENT_QUOTES, 'UTF-8'); ?>/modules/supplier/index.php"
-                    class="sidebar-sublink <?php echo isSidebarActive('/modules/supplier/') ? 'active' : ''; ?>"
+                    href="<?php echo htmlspecialchars($basePath, ENT_QUOTES, 'UTF-8'); ?>/modules/suppliers/index.php"
+                    class="sidebar-sublink <?php echo isSidebarActive('/modules/suppliers/') ? 'active' : ''; ?>"
                 >
                     Supplier Details &amp; History List
                 </a>
@@ -406,7 +421,7 @@ $settingsOpen =
                 data-target="settingsSubmenu"
                 aria-expanded="<?php echo $settingsOpen ? 'true' : 'false'; ?>"
                 aria-controls="settingsSubmenu"
-                onclick="toggleSidebarSubmenu(this, 'settingsSubmenu')"
+                onclick="return GrocerEaseSidebarDropdown.toggle(event, this, 'settingsSubmenu')"
             >
 
                 <span class="sidebar-icon">
@@ -450,6 +465,8 @@ $settingsOpen =
         </div>
 
 
+        <?php endif; ?>
+
     </nav>
 
 
@@ -476,85 +493,206 @@ $settingsOpen =
 
 </aside>
 
-
 <!-- =========================================================
-     SIDEBAR DROPDOWN FALLBACK
+     SELF-CONTAINED SIDEBAR DROPDOWN CONTROLLER
+     =========================================================
+     This controller intentionally lives in sidebar.php.
+     It prevents page-specific or cached sidebar.js files from
+     changing Product / Supplier / Settings dropdown state.
      ========================================================= -->
 
 <script>
+window.GrocerEaseSidebarDropdown = (function () {
+    'use strict';
 
-function toggleSidebarSubmenu(button, submenuId) {
-
-    const submenu = document.getElementById(submenuId);
-
-    if (!submenu) {
-        return;
+    function getSidebar() {
+        return document.getElementById('appSidebar');
     }
 
-    const isOpen = submenu.style.display === 'block';
+    function closeGroup(group) {
 
-    /*
-    |--------------------------------------------------------------------------
-    | CLOSE ALL SIDEBAR SUBMENUS
-    |--------------------------------------------------------------------------
-    */
+        if (!group) {
+            return;
+        }
 
-    document.querySelectorAll('.sidebar-submenu').forEach(function(menu) {
+        const submenu =
+            group.querySelector('.sidebar-submenu');
 
-        menu.style.display = 'none';
-
-    });
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | REMOVE OPEN STATE FROM ALL GROUPS
-    |--------------------------------------------------------------------------
-    */
-
-    document.querySelectorAll('.sidebar-group').forEach(function(group) {
+        const toggle =
+            group.querySelector('.sidebar-toggle');
 
         group.classList.remove('open');
 
-    });
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | RESET ALL ARIA STATES
-    |--------------------------------------------------------------------------
-    */
-
-    document.querySelectorAll('.sidebar-toggle').forEach(function(toggle) {
-
-        toggle.setAttribute('aria-expanded', 'false');
-
-    });
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | OPEN SELECTED SUBMENU
-    |--------------------------------------------------------------------------
-    */
-
-    if (!isOpen) {
-
-        submenu.style.display = 'block';
-
-        const parentGroup = button.closest('.sidebar-group');
-
-        if (parentGroup) {
-
-            parentGroup.classList.add('open');
-
+        if (submenu) {
+            submenu.style.display = 'none';
         }
 
-        button.setAttribute('aria-expanded', 'true');
-
+        if (toggle) {
+            toggle.setAttribute(
+                'aria-expanded',
+                'false'
+            );
+        }
     }
 
-}
+    function openGroup(group) {
 
+        if (!group) {
+            return;
+        }
+
+        const submenu =
+            group.querySelector('.sidebar-submenu');
+
+        const toggle =
+            group.querySelector('.sidebar-toggle');
+
+        group.classList.add('open');
+
+        if (submenu) {
+            submenu.style.display = 'block';
+        }
+
+        if (toggle) {
+            toggle.setAttribute(
+                'aria-expanded',
+                'true'
+            );
+        }
+    }
+
+    function toggle(event, button, submenuId) {
+
+        /*
+        |--------------------------------------------------------------------------
+        | STOP OLD / DUPLICATE SIDEBAR HANDLERS
+        |--------------------------------------------------------------------------
+        | Some existing pages still load an older sidebar.js. This stops that
+        | file from running another click handler after this one.
+        |--------------------------------------------------------------------------
+        */
+
+        if (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (
+                typeof event.stopImmediatePropagation ===
+                'function'
+            ) {
+                event.stopImmediatePropagation();
+            }
+        }
+
+        const sidebar =
+            getSidebar();
+
+        if (!sidebar || !button) {
+            return false;
+        }
+
+        const group =
+            button.closest('.sidebar-group');
+
+        const submenu =
+            document.getElementById(submenuId);
+
+        if (!group || !submenu) {
+            return false;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | DETERMINE CURRENT STATE
+        |--------------------------------------------------------------------------
+        | We read the actual computed visibility instead of relying only on a
+        | CSS class. This makes it work even when another page stylesheet has
+        | changed the class state.
+        |--------------------------------------------------------------------------
+        */
+
+        const currentlyVisible =
+            window.getComputedStyle(submenu).display !==
+            'none';
+
+        /*
+        |--------------------------------------------------------------------------
+        | CLOSE ALL SIDEBAR DROPDOWNS
+        |--------------------------------------------------------------------------
+        */
+
+        sidebar
+            .querySelectorAll('.sidebar-group')
+            .forEach(function (otherGroup) {
+
+                closeGroup(otherGroup);
+
+            });
+
+        /*
+        |--------------------------------------------------------------------------
+        | OPEN SELECTED DROPDOWN WHEN IT WAS CLOSED
+        |--------------------------------------------------------------------------
+        */
+
+        if (!currentlyVisible) {
+            openGroup(group);
+        }
+
+        return false;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | NORMALIZE INITIAL STATE
+    |--------------------------------------------------------------------------
+    | PHP marks the active Product / Supplier / Settings group as .open.
+    | We explicitly synchronize its inline display state after rendering.
+    |--------------------------------------------------------------------------
+    */
+
+    function normalizeInitialState() {
+
+        const sidebar =
+            getSidebar();
+
+        if (!sidebar) {
+            return;
+        }
+
+        sidebar
+            .querySelectorAll('.sidebar-group')
+            .forEach(function (group) {
+
+                if (
+                    group.classList.contains('open')
+                ) {
+                    openGroup(group);
+                } else {
+                    closeGroup(group);
+                }
+
+            });
+    }
+
+    if (document.readyState === 'loading') {
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            normalizeInitialState,
+            { once: true }
+        );
+
+    } else {
+
+        normalizeInitialState();
+    }
+
+    return {
+        toggle: toggle
+    };
+
+})();
 </script>
-```
+

@@ -1,195 +1,294 @@
 /*
 |--------------------------------------------------------------------------
-| GrocerEase Sidebar / Topbar JavaScript
+| GrocerEase Shared Topbar / Mobile Sidebar JavaScript
+|--------------------------------------------------------------------------
+| IMPORTANT:
+| Product Management, Supplier Management and Settings dropdowns are handled
+| directly inside includes/sidebar.php.
+|
+| This file handles only:
+| - Mobile sidebar open/close
+| - Notification dropdown
+| - User menu dropdown
 |--------------------------------------------------------------------------
 */
 
-document.addEventListener("DOMContentLoaded", function () {
+(function () {
+    'use strict';
 
 
-    /* =========================================================
-       SIDEBAR DROPDOWNS
-       ========================================================= */
+    /*
+    |--------------------------------------------------------------------------
+    | PREVENT DOUBLE LOADING
+    |--------------------------------------------------------------------------
+    */
 
-    const sidebarToggles =
-        document.querySelectorAll(".sidebar-toggle");
+    if (window.GrocerEaseSharedUiInitialized) {
+        return;
+    }
 
-
-    sidebarToggles.forEach(function (toggle) {
-
-        toggle.addEventListener("click", function () {
-
-            const targetId =
-                toggle.getAttribute("data-target");
-
-            const target =
-                document.getElementById(targetId);
-
-            const group =
-                toggle.closest(".sidebar-group");
+    window.GrocerEaseSharedUiInitialized = true;
 
 
-            if (!target || !group) {
-                return;
+    function initializeSharedUi() {
+
+        /*
+        |--------------------------------------------------------------------------
+        | MOBILE SIDEBAR
+        |--------------------------------------------------------------------------
+        */
+
+        const mobileButton =
+            document.getElementById('sidebarMobileButton');
+
+        const sidebar =
+            document.getElementById('appSidebar');
+
+
+        if (mobileButton && sidebar) {
+
+            mobileButton.addEventListener(
+                'click',
+                function (event) {
+
+                    event.stopPropagation();
+
+                    const isOpen =
+                        sidebar.classList.toggle('mobile-open');
+
+                    mobileButton.setAttribute(
+                        'aria-expanded',
+                        isOpen ? 'true' : 'false'
+                    );
+
+                }
+            );
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | NOTIFICATION DROPDOWN
+        |--------------------------------------------------------------------------
+        */
+
+        const notificationButton =
+            document.getElementById('notificationButton');
+
+        const notificationDropdown =
+            document.getElementById('notificationDropdown');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | USER MENU
+        |--------------------------------------------------------------------------
+        */
+
+        const userButton =
+            document.getElementById('userMenuButton');
+
+        const userDropdown =
+            document.getElementById('userMenuDropdown');
+
+
+        function closeNotificationDropdown() {
+
+            if (notificationDropdown) {
+                notificationDropdown.classList.remove('open');
             }
 
+            if (notificationButton) {
 
-            /*
-             * Close other sidebar dropdowns.
-             */
+                notificationButton.classList.remove('active');
 
-            document
-                .querySelectorAll(".sidebar-group.open")
-                .forEach(function (otherGroup) {
+                notificationButton.setAttribute(
+                    'aria-expanded',
+                    'false'
+                );
+            }
 
-                    if (otherGroup !== group) {
+        }
 
-                        otherGroup.classList.remove("open");
 
-                        const otherToggle =
-                            otherGroup.querySelector(
-                                ".sidebar-toggle"
-                            );
+        function closeUserDropdown() {
 
-                        if (otherToggle) {
+            if (userDropdown) {
+                userDropdown.classList.remove('open');
+            }
 
-                            otherToggle.setAttribute(
-                                "aria-expanded",
-                                "false"
+            if (userButton) {
+
+                userButton.setAttribute(
+                    'aria-expanded',
+                    'false'
+                );
+            }
+
+        }
+
+
+        if (
+            notificationButton &&
+            notificationDropdown
+        ) {
+
+            notificationButton.addEventListener(
+                'click',
+                function (event) {
+
+                    event.stopPropagation();
+
+                    closeUserDropdown();
+
+                    const isOpen =
+                        notificationDropdown.classList.toggle('open');
+
+                    notificationButton.classList.toggle(
+                        'active',
+                        isOpen
+                    );
+
+                    notificationButton.setAttribute(
+                        'aria-expanded',
+                        isOpen ? 'true' : 'false'
+                    );
+
+                }
+            );
+
+
+            notificationDropdown.addEventListener(
+                'click',
+                function (event) {
+
+                    event.stopPropagation();
+
+                }
+            );
+
+        }
+
+
+        if (userButton && userDropdown) {
+
+            userButton.addEventListener(
+                'click',
+                function (event) {
+
+                    event.stopPropagation();
+
+                    closeNotificationDropdown();
+
+                    const isOpen =
+                        userDropdown.classList.toggle('open');
+
+                    userButton.setAttribute(
+                        'aria-expanded',
+                        isOpen ? 'true' : 'false'
+                    );
+
+                }
+            );
+
+
+            userDropdown.addEventListener(
+                'click',
+                function (event) {
+
+                    event.stopPropagation();
+
+                }
+            );
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CLICK OUTSIDE TOPBAR MENUS
+        |--------------------------------------------------------------------------
+        */
+
+        document.addEventListener(
+            'click',
+            function () {
+
+                closeNotificationDropdown();
+                closeUserDropdown();
+
+            }
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | MOBILE SIDEBAR LINKS
+        |--------------------------------------------------------------------------
+        */
+
+        document
+            .querySelectorAll('.app-sidebar a')
+            .forEach(function (link) {
+
+                link.addEventListener(
+                    'click',
+                    function () {
+
+                        if (
+                            window.innerWidth <= 900 &&
+                            sidebar
+                        ) {
+
+                            sidebar.classList.remove('mobile-open');
+
+                        }
+
+                        if (mobileButton) {
+
+                            mobileButton.setAttribute(
+                                'aria-expanded',
+                                'false'
                             );
 
                         }
 
                     }
-
-                });
-
-
-            /*
-             * Toggle selected group.
-             */
-
-            const isOpen =
-                group.classList.toggle("open");
-
-
-            toggle.setAttribute(
-                "aria-expanded",
-                isOpen ? "true" : "false"
-            );
-
-        });
-
-    });
-
-
-    /* =========================================================
-       MOBILE SIDEBAR
-       ========================================================= */
-
-    const mobileButton =
-        document.getElementById(
-            "sidebarMobileButton"
-        );
-
-
-    const sidebar =
-        document.getElementById(
-            "appSidebar"
-        );
-
-
-    if (mobileButton && sidebar) {
-
-        mobileButton.addEventListener(
-            "click",
-            function () {
-
-                const isOpen =
-                    sidebar.classList.toggle(
-                        "mobile-open"
-                    );
-
-
-                mobileButton.setAttribute(
-                    "aria-expanded",
-                    isOpen ? "true" : "false"
                 );
 
-            }
-        );
-
-    }
+            });
 
 
-    /* =========================================================
-       NOTIFICATION DROPDOWN
-       ========================================================= */
+        /*
+        |--------------------------------------------------------------------------
+        | ESCAPE KEY
+        |--------------------------------------------------------------------------
+        */
 
-    const notificationButton =
-        document.getElementById(
-            "notificationButton"
-        );
-
-
-    const notificationDropdown =
-        document.getElementById(
-            "notificationDropdown"
-        );
-
-
-    if (
-        notificationButton &&
-        notificationDropdown
-    ) {
-
-        notificationButton.addEventListener(
-            "click",
+        document.addEventListener(
+            'keydown',
             function (event) {
 
-                event.stopPropagation();
-
-
-                const userDropdown =
-                    document.getElementById(
-                        "userMenuDropdown"
-                    );
-
-                const userButton =
-                    document.getElementById(
-                        "userMenuButton"
-                    );
-
-
-                if (userDropdown) {
-                    userDropdown.classList.remove("open");
+                if (event.key !== 'Escape') {
+                    return;
                 }
 
+                closeNotificationDropdown();
+                closeUserDropdown();
 
-                if (userButton) {
-                    userButton.setAttribute(
-                        "aria-expanded",
-                        "false"
-                    );
+                if (sidebar) {
+                    sidebar.classList.remove('mobile-open');
                 }
 
+                if (mobileButton) {
 
-                const isOpen =
-                    notificationDropdown.classList.toggle(
-                        "open"
+                    mobileButton.setAttribute(
+                        'aria-expanded',
+                        'false'
                     );
 
-
-                notificationButton.classList.toggle(
-                    "active",
-                    isOpen
-                );
-
-
-                notificationButton.setAttribute(
-                    "aria-expanded",
-                    isOpen ? "true" : "false"
-                );
+                }
 
             }
         );
@@ -197,206 +296,24 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* =========================================================
-       USER / ADMINISTRATOR DROPDOWN
-       ========================================================= */
+    /*
+    |--------------------------------------------------------------------------
+    | START
+    |--------------------------------------------------------------------------
+    */
 
-    const userButton =
-        document.getElementById(
-            "userMenuButton"
+    if (document.readyState === 'loading') {
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            initializeSharedUi,
+            { once: true }
         );
 
+    } else {
 
-    const userDropdown =
-        document.getElementById(
-            "userMenuDropdown"
-        );
-
-
-    if (userButton && userDropdown) {
-
-        userButton.addEventListener(
-            "click",
-            function (event) {
-
-                event.stopPropagation();
-
-
-                const notificationDropdown =
-                    document.getElementById(
-                        "notificationDropdown"
-                    );
-
-                const notificationButton =
-                    document.getElementById(
-                        "notificationButton"
-                    );
-
-
-                if (notificationDropdown) {
-
-                    notificationDropdown.classList.remove(
-                        "open"
-                    );
-
-                }
-
-
-                if (notificationButton) {
-
-                    notificationButton.classList.remove(
-                        "active"
-                    );
-
-                    notificationButton.setAttribute(
-                        "aria-expanded",
-                        "false"
-                    );
-
-                }
-
-
-                const isOpen =
-                    userDropdown.classList.toggle(
-                        "open"
-                    );
-
-
-                userButton.setAttribute(
-                    "aria-expanded",
-                    isOpen ? "true" : "false"
-                );
-
-            }
-        );
+        initializeSharedUi();
 
     }
 
-
-    /* =========================================================
-       CLOSE TOPBAR DROPDOWNS WHEN CLICKING OUTSIDE
-       ========================================================= */
-
-    document.addEventListener(
-        "click",
-        function () {
-
-            if (notificationDropdown) {
-
-                notificationDropdown.classList.remove(
-                    "open"
-                );
-
-            }
-
-
-            if (notificationButton) {
-
-                notificationButton.classList.remove(
-                    "active"
-                );
-
-                notificationButton.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
-
-            }
-
-
-            if (userDropdown) {
-
-                userDropdown.classList.remove(
-                    "open"
-                );
-
-            }
-
-
-            if (userButton) {
-
-                userButton.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
-
-            }
-
-        }
-    );
-
-
-    /* =========================================================
-       PREVENT DROPDOWN CLICKS FROM CLOSING THEMSELVES
-       ========================================================= */
-
-    if (notificationDropdown) {
-
-        notificationDropdown.addEventListener(
-            "click",
-            function (event) {
-
-                event.stopPropagation();
-
-            }
-        );
-
-    }
-
-
-    if (userDropdown) {
-
-        userDropdown.addEventListener(
-            "click",
-            function (event) {
-
-                event.stopPropagation();
-
-            }
-        );
-
-    }
-
-
-    /* =========================================================
-       CLOSE MOBILE SIDEBAR AFTER NAVIGATION
-       ========================================================= */
-
-    document
-        .querySelectorAll(
-            ".app-sidebar a"
-        )
-        .forEach(function (link) {
-
-            link.addEventListener(
-                "click",
-                function () {
-
-                    if (
-                        window.innerWidth <= 900 &&
-                        sidebar
-                    ) {
-
-                        sidebar.classList.remove(
-                            "mobile-open"
-                        );
-
-                    }
-
-
-                    if (mobileButton) {
-
-                        mobileButton.setAttribute(
-                            "aria-expanded",
-                            "false"
-                        );
-
-                    }
-
-                }
-            );
-
-        });
-
-
-});
+})();

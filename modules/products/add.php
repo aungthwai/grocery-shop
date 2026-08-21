@@ -28,6 +28,16 @@ if (!isset($_SESSION['user_id'])) {
 |--------------------------------------------------------------------------
 */ 
 
+/*
+|--------------------------------------------------------------------------
+| ADMIN ACCESS
+|--------------------------------------------------------------------------
+*/
+
+require_once "../../includes/role_guard.php";
+grocerEaseRequireAdmin();
+
+
 require_once "../../config/database.php"; 
 
 /* 
@@ -38,6 +48,21 @@ require_once "../../config/database.php";
 
 $basePath = "/grocery-shop"; 
 $pageTitle = "Add Product"; 
+
+/*
+|--------------------------------------------------------------------------
+| PRODUCT CSRF TOKEN
+|--------------------------------------------------------------------------
+*/
+
+if (
+    empty($_SESSION['product_csrf_token']) ||
+    !is_string($_SESSION['product_csrf_token'])
+) {
+    $_SESSION['product_csrf_token'] = bin2hex(random_bytes(32));
+}
+
+$productCsrfToken = $_SESSION['product_csrf_token'];
 
 /* 
 |--------------------------------------------------------------------------
@@ -67,6 +92,7 @@ $purchasePrice = '';
 $sellingPrice = ''; 
 $stock = '0'; 
 $minimumStock = '0'; 
+$expiryDate = ''; 
 $status = 'Active'; 
 
 /* 
@@ -125,6 +151,15 @@ if ($supplierResult) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') { 
 
+    $submittedCsrfToken = (string) ($_POST['csrf_token'] ?? '');
+
+    if (
+        $submittedCsrfToken === '' ||
+        !hash_equals($productCsrfToken, $submittedCsrfToken)
+    ) {
+        $errors[] = "Your form session expired. Please refresh the page and try again.";
+    }
+
     $productName = trim($_POST['product_name'] ?? ''); 
     $categoryId = filter_input( 
         INPUT_POST, 
@@ -150,6 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'minimum_stock', 
         FILTER_VALIDATE_INT 
     ); 
+    $expiryDate = trim($_POST['expiry_date'] ?? ''); 
     $status = trim($_POST['status'] ?? ''); 
 
     /* 
@@ -223,6 +259,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($minimumStock < 0) { 
         $errors[] = "Minimum stock must be a whole number greater than or equal to 0."; 
     } 
+
+    if ($expiryDate !== '') {
+
+        $expiryObject = DateTime::createFromFormat('Y-m-d', $expiryDate);
+
+        if (
+            !$expiryObject ||
+            $expiryObject->format('Y-m-d') !== $expiryDate
+        ) {
+            $errors[] = "Please enter a valid expiry date.";
+        }
+    }
 
     if ($status !== 'Active' && $status !== 'Inactive') { 
         $errors[] = "Please select a valid product status."; 
@@ -402,6 +450,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $purchasePriceValue = (float) $purchasePrice; 
         $sellingPriceValue = (float) $sellingPrice; 
         $supplierValue = $supplierId > 0 ? $supplierId : null; 
+        $expiryDateValue = $expiryDate !== '' ? $expiryDate : null; 
 
         $insertSql = " 
             INSERT INTO products ( 
@@ -414,9 +463,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 selling_price, 
                 stock, 
                 minimum_stock, 
+                expiry_date,
                 image, 
                 status 
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
         "; 
 
         $insertStatement = mysqli_prepare($conn, $insertSql); 
@@ -425,7 +475,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             mysqli_stmt_bind_param( 
                 $insertStatement, 
-                'iisssddiiss', 
+                'iisssddiisss', 
                 $categoryId, 
                 $supplierValue, 
                 $productName, 
@@ -435,6 +485,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $sellingPriceValue, 
                 $stock, 
                 $minimumStock, 
+                $expiryDateValue,
                 $imageValue, 
                 $status 
             ); 
@@ -727,7 +778,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         action="<?php echo e($basePath); ?>/modules/products/add.php" 
                         class="add-product-form" 
                         enctype="multipart/form-data" 
-                    > 
+                    >
+
+                        <input
+                            type="hidden"
+                            name="csrf_token"
+                            value="<?php echo e($productCsrfToken); ?>"
+                        > 
  
                         <div class="add-product-field full-width"> 
                             <label for="product-name">Product Name *</label> 
@@ -853,6 +910,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             > 
                         </div> 
  
+                        <div class="add-product-field">
+                            <label for="expiry-date">Expiry Date</label>
+                            <input
+                                type="date"
+                                id="expiry-date"
+                                name="expiry_date"
+                                value="<?php echo e($expiryDate); ?>"
+                            >
+                            <p class="add-product-help">
+                                Optional. Leave blank for products without an expiry date.
+                            </p>
+                        </div>
+
                         <div class="add-product-field"> 
                             <label for="status">Status *</label> 
                             <select id="status" name="status" required> 

@@ -296,6 +296,58 @@
 
 
 /* =========================================================
+   RELIABLE CSS-ONLY DROPDOWN STATE
+   =========================================================
+   The hidden checkbox owns the open/closed state. This means
+   Product / Supplier / Settings menus work even when page
+   JavaScript is unavailable or fails to initialize.
+   ========================================================= */
+
+.sidebar-dropdown-state {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    overflow: hidden;
+}
+
+
+/* Show submenu when its checkbox is checked. */
+
+.sidebar-dropdown-state:checked
+    + .sidebar-toggle
+    + .sidebar-submenu {
+    display: block;
+}
+
+
+/* Rotate arrow when open. */
+
+.sidebar-dropdown-state:checked
+    + .sidebar-toggle
+    .sidebar-arrow {
+    transform: rotate(180deg);
+
+    color: #2563eb;
+}
+
+
+/* Keyboard accessibility. */
+
+.sidebar-dropdown-state:focus-visible
+    + .sidebar-toggle {
+    outline: 2px solid #2563eb;
+
+    outline-offset: 2px;
+}
+
+
+/* =========================================================
    DROPDOWN BUTTON
    ========================================================= */
 
@@ -329,13 +381,6 @@
 }
 
 
-.sidebar-group.open .sidebar-arrow {
-    transform: rotate(180deg);
-
-    color: #2563eb;
-}
-
-
 /* =========================================================
    SUBMENU
    ========================================================= */
@@ -344,11 +389,6 @@
     display: none;
 
     padding: 4px 0 6px 34px;
-}
-
-
-.sidebar-group.open .sidebar-submenu {
-    display: block;
 }
 
 

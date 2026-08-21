@@ -55,7 +55,7 @@ session_start();
 | - Open the browser print dialog without modifying purchase data.
 |
 | - No edit/delete purchase functionality is implemented yet.
-| - No supplier balance/due functionality is implemented yet.
+| - Paid/Due purchase status is supported. Supplier settlement tracking is handled separately.
 |--------------------------------------------------------------------------
 */
 
@@ -96,6 +96,26 @@ if (!isset($_SESSION['user_id'])) {
 |--------------------------------------------------------------------------
 */
 
+/*
+|--------------------------------------------------------------------------
+| ADMIN ACCESS
+|--------------------------------------------------------------------------
+*/
+
+require_once "../../includes/role_guard.php";
+
+$purchaseNeedsJsonAccessResponse =
+    $_SERVER['REQUEST_METHOD'] === 'POST' &&
+    (
+        isset($_POST['save_purchase']) ||
+        isset($_POST['print_invoice'])
+    );
+
+grocerEaseRequireAdmin(
+    $purchaseNeedsJsonAccessResponse
+);
+
+
 require_once "../../config/database.php";
 
 
@@ -107,6 +127,24 @@ require_once "../../config/database.php";
 
 $basePath = "/grocery-shop";
 $pageTitle = "Purchases Management";
+
+
+/*
+|--------------------------------------------------------------------------
+| CSRF TOKEN
+|--------------------------------------------------------------------------
+*/
+
+if (
+    empty($_SESSION['purchase_csrf_token']) ||
+    !is_string($_SESSION['purchase_csrf_token'])
+) {
+    $_SESSION['purchase_csrf_token'] =
+        bin2hex(random_bytes(32));
+}
+
+$purchaseCsrfToken =
+    $_SESSION['purchase_csrf_token'];
 
 
 /*
@@ -368,6 +406,45 @@ if (
             );
 
 
+        $paymentStatus =
+            trim(
+                (string) (
+                    $_POST['payment_status'] ?? 'Paid'
+                )
+            );
+
+        $remarks =
+            trim(
+                (string) (
+                    $_POST['remarks'] ?? ''
+                )
+            );
+
+        $csrfToken =
+            (string) (
+                $_POST['csrf_token'] ?? ''
+            );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | VALIDATE CSRF TOKEN
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $csrfToken === '' ||
+            !hash_equals(
+                $purchaseCsrfToken,
+                $csrfToken
+            )
+        ) {
+            throw new Exception(
+                'Invalid form request. Please refresh the page and try again.'
+            );
+        }
+
+
         /*
         |--------------------------------------------------------------------------
         | VALIDATE SUPPLIER
@@ -442,6 +519,42 @@ if (
                 'PO / Invoice Number cannot exceed 50 characters.'
             );
 
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | VALIDATE PAYMENT STATUS
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            !in_array(
+                $paymentStatus,
+                ['Paid', 'Due'],
+                true
+            )
+        ) {
+            throw new Exception(
+                'Please select a valid payment status.'
+            );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | VALIDATE REMARKS
+        |--------------------------------------------------------------------------
+        */
+
+        if (mb_strlen($remarks) > 1000) {
+            throw new Exception(
+                'Remarks cannot exceed 1000 characters.'
+            );
+        }
+
+        if ($remarks === '') {
+            $remarks = null;
         }
 
 
@@ -981,17 +1094,8 @@ if (
         |--------------------------------------------------------------------------
         | PREPARE PURCHASE INSERT
         |--------------------------------------------------------------------------
-        |
-        | payment_status:
-        | - Existing database default is Paid.
-        | - Stage 5 does not introduce payment/due management.
-        |
-        | remarks:
-        | - No remarks field exists in the current UI.
-        | - NULL is stored.
-        |
-        | created_at:
-        | - Explicitly uses NOW().
+        | Payment status is stored exactly as Paid or Due.
+        | Remarks are optional.
         |--------------------------------------------------------------------------
         */
 
@@ -1015,8 +1119,8 @@ if (
                         ?,
                         ?,
                         ?,
-                        'Paid',
-                        NULL,
+                        ?,
+                        ?,
                         NOW()
                     )
                 "
@@ -1037,11 +1141,13 @@ if (
 
         mysqli_stmt_bind_param(
             $purchaseInsertStmt,
-            "issd",
+            "issdss",
             $supplierId,
             $invoiceNo,
             $purchaseDate,
-            $purchaseTotal
+            $purchaseTotal,
+            $paymentStatus,
+            $remarks
         );
 
 
@@ -1458,7 +1564,9 @@ if (
                     2,
                     '.',
                     ''
-                )
+                ),
+            'payment_status' =>
+                $paymentStatus
         ]);
 
         exit;
@@ -1867,7 +1975,8 @@ require_once "../../includes/header.php";
     }
 
     .purchase-field input,
-    .purchase-field select {
+    .purchase-field select,
+    .purchase-field textarea {
         width: 100%;
         min-height: 44px;
         padding: 10px 12px;
@@ -1881,9 +1990,17 @@ require_once "../../includes/header.php";
     }
 
     .purchase-field input:focus,
-    .purchase-field select:focus {
+    .purchase-field select:focus,
+    .purchase-field textarea:focus {
         border-color: #2563eb;
         box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+    }
+
+
+    .purchase-field textarea {
+        min-height: 88px;
+        resize: vertical;
+        font-family: inherit;
     }
 
 
@@ -2577,6 +2694,55 @@ require_once "../../includes/header.php";
                                 </div>
 
 
+                                <!-- =============================
+                                     PAYMENT STATUS
+                                     ============================= -->
+
+                                <div class="purchase-field">
+
+                                    <label for="payment_status">
+                                        Payment Status
+                                    </label>
+
+                                    <select
+                                        id="payment_status"
+                                        name="payment_status"
+                                    >
+                                        <option value="Paid" selected>
+                                            Paid
+                                        </option>
+
+                                        <option value="Due">
+                                            Due
+                                        </option>
+                                    </select>
+
+                                </div>
+
+
+                                <!-- =============================
+                                     REMARKS
+                                     ============================= -->
+
+                                <div class="purchase-field full-width">
+
+                                    <label for="purchase_remarks">
+                                        Remarks
+                                        <span style="font-weight:400;color:#64748b;">
+                                            (Optional)
+                                        </span>
+                                    </label>
+
+                                    <textarea
+                                        id="purchase_remarks"
+                                        name="remarks"
+                                        maxlength="1000"
+                                        placeholder="Add a short note about this purchase..."
+                                    ></textarea>
+
+                                </div>
+
+
                             </div>
 
 
@@ -3063,8 +3229,8 @@ require_once "../../includes/header.php";
 
                                         $recentPurchaseStatusLabel =
                                             $recentPurchaseStatus === 'Due'
-                                                ? 'Pending'
-                                                : 'Received';
+                                                ? 'Due'
+                                                : 'Paid';
 
                                         ?>
 
@@ -3219,6 +3385,14 @@ require_once "../../includes/header.php";
         <?php echo (int) $latestPurchaseId; ?>;
 
 
+    const purchaseCsrfToken =
+        <?php echo json_encode(
+            $purchaseCsrfToken,
+            JSON_UNESCAPED_SLASHES |
+            JSON_UNESCAPED_UNICODE
+        ); ?>;
+
+
     /*
     |--------------------------------------------------------------------------
     | PRODUCT SEARCH ELEMENTS
@@ -3300,6 +3474,12 @@ require_once "../../includes/header.php";
 
     const invoiceNo =
         document.getElementById('invoice_no');
+
+    const paymentStatus =
+        document.getElementById('payment_status');
+
+    const purchaseRemarks =
+        document.getElementById('purchase_remarks');
 
     const savePurchaseButton =
         document.getElementById('savePurchaseButton');
@@ -4449,6 +4629,21 @@ require_once "../../includes/header.php";
         );
 
         formData.append(
+            'payment_status',
+            paymentStatus.value
+        );
+
+        formData.append(
+            'remarks',
+            purchaseRemarks.value.trim()
+        );
+
+        formData.append(
+            'csrf_token',
+            purchaseCsrfToken
+        );
+
+        formData.append(
             'purchase_items',
             JSON.stringify(
                 purchaseItems
@@ -4544,6 +4739,12 @@ require_once "../../includes/header.php";
 
 
             invoiceNo.value =
+                '';
+
+            paymentStatus.value =
+                'Paid';
+
+            purchaseRemarks.value =
                 '';
 
 
@@ -5232,6 +5433,21 @@ newPurchaseButton.addEventListener(
             document.getElementById('invoice_no');
 
         invoiceNo.value = '';
+
+
+        /*
+        |----------------------------------------------------------------------
+        | RESET PAYMENT STATUS / REMARKS
+        |----------------------------------------------------------------------
+        */
+
+        if (paymentStatus) {
+            paymentStatus.value = 'Paid';
+        }
+
+        if (purchaseRemarks) {
+            purchaseRemarks.value = '';
+        }
 
 
         /*

@@ -1,11 +1,13 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
+-- =========================================================
+-- GrocerEase - Clean Project Database
+-- Database: grocery_shop
+-- Updated for the completed modules as of 20 Aug 2026
 --
--- Host: 127.0.0.1
--- Generation Time: Aug 09, 2026 at 05:42 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- IMPORTANT:
+-- This is the CLEAN/FRESH INSTALL database file.
+-- Do not import this over your current working database just to
+-- apply a migration. Your current database already contains data.
+-- =========================================================
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +22,13 @@ SET time_zone = "+00:00";
 --
 -- Database: `grocery_shop`
 --
+
+CREATE DATABASE IF NOT EXISTS `grocery_shop`
+    DEFAULT CHARACTER SET utf8mb4
+    COLLATE utf8mb4_general_ci;
+
+USE `grocery_shop`;
+
 
 -- --------------------------------------------------------
 
@@ -57,9 +66,21 @@ CREATE TABLE `customers` (
   `phone` varchar(20) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `address` text DEFAULT NULL,
+  `customer_type` enum('Retail','Wholesale') NOT NULL DEFAULT 'Retail',
+  `account_status` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
+  `opening_due` decimal(10,2) NOT NULL DEFAULT 0.00,
   `total_due` decimal(10,2) NOT NULL DEFAULT 0.00,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `customers`
+--
+
+INSERT INTO `customers` (`customer_id`, `customer_name`, `phone`, `email`, `address`, `customer_type`, `account_status`, `opening_due`, `total_due`, `created_at`) VALUES
+(1, 'Rahim Uddin', '01711-111111', 'rahim@example.com', 'Dhaka, Bangladesh', 'Wholesale', 'Active', 0.00, 0.00, '2026-08-19 19:56:56'),
+(2, 'Korim Chacha', '01711-111112', 'korim1@gmail.com', 'Chittangong', 'Retail', 'Inactive', 0.00, 0.00, '2026-08-19 20:10:12'),
+(3, 'Raihan Islam', '01711-115032', 'raihan02@gmail.com', 'Barishal, Bangladesh', 'Retail', 'Inactive', 0.00, 0.00, '2026-08-19 20:45:00');
 
 -- --------------------------------------------------------
 
@@ -77,11 +98,8 @@ CREATE TABLE `password_resets` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `password_resets`
+-- No password reset rows are inserted in a fresh installation.
 --
-
-INSERT INTO `password_resets` (`reset_id`, `user_id`, `token_hash`, `expires_at`, `used_at`, `created_at`) VALUES
-(2, 1, '734e8749c0485dd369dce3ce41a348472df64c31c148fe0c2715ff1d2a0160c5', '2026-08-07 17:22:28', '2026-08-07 17:07:59', '2026-08-07 15:07:28');
 
 -- --------------------------------------------------------
 
@@ -91,11 +109,13 @@ INSERT INTO `password_resets` (`reset_id`, `user_id`, `token_hash`, `expires_at`
 
 CREATE TABLE `payments` (
   `payment_id` int(10) UNSIGNED NOT NULL,
-  `sale_id` int(10) UNSIGNED NOT NULL,
+  `sale_id` int(10) UNSIGNED DEFAULT NULL,
   `customer_id` int(10) UNSIGNED NOT NULL,
   `payment_date` date NOT NULL,
   `amount` decimal(10,2) NOT NULL,
   `payment_method` enum('Cash','Card','Mobile Banking') NOT NULL DEFAULT 'Cash',
+  `payment_type` enum('Sale','Due Collection','Opening Due') NOT NULL DEFAULT 'Sale',
+  `collection_ref` varchar(50) DEFAULT NULL,
   `notes` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -122,6 +142,16 @@ CREATE TABLE `products` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`product_id`, `category_id`, `supplier_id`, `product_name`, `barcode`, `unit`, `purchase_price`, `selling_price`, `stock`, `minimum_stock`, `image`, `status`, `created_at`) VALUES
+(2, 1, 1, 'Test Rice', '8901234567890', 'kg', 50.00, 60.00, 1224, 10, NULL, 'Active', '2026-08-11 15:27:28'),
+(6, 1, NULL, 'Test Milk Edited', '8901234567891', 'pcs', 50.00, 60.00, 97, 5, NULL, 'Active', '2026-08-12 13:47:29'),
+(7, 1, NULL, 'Test Oil', '8901234567893', 'pcs', 100.00, 110.00, 321, 10, 'uploads/products/product_5a7886629b1aa7aba734e40e39aa44ff.png', 'Active', '2026-08-13 11:42:43'),
+(8, 1, NULL, 'Test Water', '8901234567812', 'kg', 50.00, 52.00, 31, 5, 'uploads/products/product_f772e41df860dfb433ef6e4a2255a6cd.jpg', 'Active', '2026-08-13 11:53:03');
+
 -- --------------------------------------------------------
 
 --
@@ -139,6 +169,19 @@ CREATE TABLE `purchases` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `purchases`
+--
+
+INSERT INTO `purchases` (`purchase_id`, `supplier_id`, `invoice_no`, `purchase_date`, `total_amount`, `payment_status`, `remarks`, `created_at`) VALUES
+(1, 1, '2', '2026-08-13', 24150.00, 'Paid', NULL, '2026-08-13 18:10:23'),
+(2, 1, '3', '2026-08-14', 3500.00, 'Paid', NULL, '2026-08-14 07:48:01'),
+(3, 1, '4', '2026-08-14', 1100.00, 'Paid', NULL, '2026-08-14 08:25:21'),
+(4, 1, '6', '2026-08-15', 56100.00, 'Paid', NULL, '2026-08-14 08:32:47'),
+(5, 1, '9', '2026-08-28', 700.00, 'Paid', NULL, '2026-08-14 08:48:17'),
+(6, 1, '11', '2026-08-13', 150.00, 'Paid', NULL, '2026-08-14 08:52:25'),
+(7, 1, '13', '2026-08-25', 3750.00, 'Paid', NULL, '2026-08-14 10:04:11');
+
 -- --------------------------------------------------------
 
 --
@@ -153,6 +196,24 @@ CREATE TABLE `purchase_items` (
   `purchase_price` decimal(10,2) NOT NULL DEFAULT 0.00,
   `subtotal` decimal(10,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `purchase_items`
+--
+
+INSERT INTO `purchase_items` (`item_id`, `purchase_id`, `product_id`, `quantity`, `purchase_price`, `subtotal`) VALUES
+(1, 1, 6, 39, 50.00, 1950.00),
+(2, 1, 7, 222, 100.00, 22200.00),
+(3, 2, 7, 30, 100.00, 3000.00),
+(4, 2, 2, 10, 50.00, 500.00),
+(5, 3, 7, 11, 100.00, 1100.00),
+(6, 4, 6, 11, 50.00, 550.00),
+(7, 4, 2, 1111, 50.00, 55550.00),
+(8, 5, 7, 7, 100.00, 700.00),
+(9, 6, 2, 3, 50.00, 150.00),
+(10, 7, 6, 22, 50.00, 1100.00),
+(11, 7, 7, 21, 100.00, 2100.00),
+(12, 7, 8, 11, 50.00, 550.00);
 
 -- --------------------------------------------------------
 
@@ -227,6 +288,13 @@ CREATE TABLE `suppliers` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `suppliers`
+--
+
+INSERT INTO `suppliers` (`supplier_id`, `supplier_name`, `phone`, `email`, `address`, `company`, `created_at`) VALUES
+(1, 'Test Supplier', '01700000000', 'test@supplier.com', 'Dhaka, Bangladesh', 'Test Company', '2026-08-11 15:24:00');
+
 -- --------------------------------------------------------
 
 --
@@ -269,7 +337,9 @@ ALTER TABLE `categories`
 ALTER TABLE `customers`
   ADD PRIMARY KEY (`customer_id`),
   ADD KEY `idx_customer_name` (`customer_name`),
-  ADD KEY `idx_customer_phone` (`phone`);
+  ADD KEY `idx_customer_phone` (`phone`),
+  ADD KEY `idx_customer_type` (`customer_type`),
+  ADD KEY `idx_customer_account_status` (`account_status`);
 
 --
 -- Indexes for table `password_resets`
@@ -287,7 +357,9 @@ ALTER TABLE `payments`
   ADD PRIMARY KEY (`payment_id`),
   ADD KEY `idx_payments_sale` (`sale_id`),
   ADD KEY `idx_payments_customer` (`customer_id`),
-  ADD KEY `idx_payments_date` (`payment_date`);
+  ADD KEY `idx_payments_date` (`payment_date`),
+  ADD KEY `idx_payments_type` (`payment_type`),
+  ADD KEY `idx_payments_collection` (`collection_ref`);
 
 --
 -- Indexes for table `products`
@@ -372,13 +444,13 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `customer_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `customer_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `password_resets`
 --
 ALTER TABLE `password_resets`
-  MODIFY `reset_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `reset_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `payments`
@@ -390,19 +462,19 @@ ALTER TABLE `payments`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `product_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `product_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `purchases`
 --
 ALTER TABLE `purchases`
-  MODIFY `purchase_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `purchase_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `purchase_items`
 --
 ALTER TABLE `purchase_items`
-  MODIFY `item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `sales`
@@ -426,7 +498,7 @@ ALTER TABLE `settings`
 -- AUTO_INCREMENT for table `suppliers`
 --
 ALTER TABLE `suppliers`
-  MODIFY `supplier_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `supplier_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -446,6 +518,9 @@ ALTER TABLE `password_resets`
 
 --
 -- Constraints for table `payments`
+--
+-- sale_id is nullable because Opening Due collections do not belong
+-- to a specific sale. When sale_id is present, the normal FK applies.
 --
 ALTER TABLE `payments`
   ADD CONSTRAINT `fk_payments_customer` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`) ON UPDATE CASCADE,

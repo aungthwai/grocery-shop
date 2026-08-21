@@ -40,6 +40,20 @@ $basePath = "/grocery-shop";
 /*
 |-------------------------------------------------------------------------
 -
+| WHOLESALE OVERDUE RULE
+|-------------------------------------------------------------------------
+-
+| Keep this synchronized with Wholesale Due Management.
+| A customer is overdue when at least one remaining wholesale sale due
+| is older than 30 days.
+|-------------------------------------------------------------------------
+-
+*/
+$overdueDays = 30;
+
+/*
+|-------------------------------------------------------------------------
+-
 | 1. Total Customers
 |-------------------------------------------------------------------------
 -
@@ -63,9 +77,9 @@ $totalCustomers = (int) $row['total'];
 */
 $activeCustomers = 0;
 $sql = "
-SELECT COUNT(DISTINCT customer_id) AS total
-FROM sales
-WHERE customer_id IS NOT NULL
+SELECT COUNT(*) AS total
+FROM customers
+WHERE account_status = 'Active'
 ";
 $result = mysqli_query($conn, $sql);
 if ($result) {
@@ -83,6 +97,8 @@ $outstandingDue = 0;
 $sql = "
 SELECT COALESCE(SUM(total_due), 0) AS total
 FROM customers
+WHERE customer_type = 'Wholesale'
+  AND total_due > 0
 ";
 $result = mysqli_query($conn, $sql);
 if ($result) {
@@ -95,16 +111,24 @@ $outstandingDue = (float) $row['total'];
 | 4. Overdue Customers
 |-------------------------------------------------------------------------
 -
-|
-| For now, customers with an outstanding balance
-| are counted here.
-|
+| Same rule used by Wholesale Due Management:
+| at least one remaining wholesale invoice due older than 30 days.
+|-------------------------------------------------------------------------
+-
 */
 $overdueCustomers = 0;
 $sql = "
-SELECT COUNT(*) AS total
-FROM customers
-WHERE total_due > 0
+SELECT COUNT(DISTINCT s.customer_id) AS total
+FROM sales s
+INNER JOIN customers c
+ON s.customer_id = c.customer_id
+WHERE c.customer_type = 'Wholesale'
+  AND c.total_due > 0
+  AND s.due_amount > 0
+  AND s.sale_date < DATE_SUB(
+      CURDATE(),
+      INTERVAL {$overdueDays} DAY
+  )
 ";
 $result = mysqli_query($conn, $sql);
 if ($result) {
