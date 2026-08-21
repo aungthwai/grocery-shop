@@ -1,0 +1,116 @@
+/* =========================================================
+   GrocerEase - Dashboard Application Layout (FINAL FIX)
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --sidebar-width: 250px;
+    --topbar-height: 70px;
+    --dashboard-bg: #f5f8fc;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+body {
+    background: var(--dashboard-bg);
+}
+
+/* =========================================================
+   APP LAYOUT - Simple Flex
+   ========================================================= */
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* =========================================================
+   SIDEBAR SLOT
+   ========================================================= */
+.app-sidebar-slot {
+    /* Just a placeholder - sidebar inside is position:fixed */
+    width: var(--sidebar-width);
+    min-width: var(--sidebar-width);
+    flex-shrink: 0;
+}
+
+/* Override the sidebar's own position:fixed so it sticks properly */
+.app-sidebar-slot .app-sidebar {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: var(--sidebar-width) !important;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 200 !important;
+}
+
+/* =========================================================
+   MAIN SLOT
+   ========================================================= */
+.app-main-slot {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    /* This is the key: content sits after the sidebar placeholder */
+    background: var(--dashboard-bg);
+}
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+.app-topbar-slot {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+    flex-shrink: 0;
+}
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+.dashboard-main-content {
+    flex: 1;
+    background: var(--dashboard-bg);
+    overflow-x: hidden;
+}
+
+.dashboard-main-content .dashboard-page {
+    width: 100%;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+@media (min-width: 901px) {
+    .app-sidebar { transform: translateX(0) !important; }
+}
+
+@media (max-width: 900px) {
+    .app-sidebar-slot {
+        width: 0;
+        min-width: 0;
+    }
+    .app-sidebar-slot .app-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+    }
+    .app-sidebar-slot .app-sidebar.mobile-open {
+        transform: translateX(0);
+    }
+    .app-main-slot {
+        width: 100%;
+    }
+}

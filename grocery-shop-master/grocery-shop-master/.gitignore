@@ -1,0 +1,23 @@
+# Windows
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Editor / IDE
+.vscode/
+.idea/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# OS / local development
+.DS_Store
+
+# PHP / application temporary files
+*.cache
