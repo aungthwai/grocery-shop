@@ -554,9 +554,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 ?> 
  
-<link rel="stylesheet" href="../../assets/css/layout.css"> 
-<link rel="stylesheet" href="../../assets/css/sidebar.css"> 
-<link rel="stylesheet" href="../../assets/css/topbar.css"> 
+<link
+    rel="stylesheet"
+    href="../../assets/css/sidebar.css"
+>
+
+<link
+    rel="stylesheet"
+    href="../../assets/css/topbar.css"
+>
+
+<link
+    rel="stylesheet"
+    href="../../assets/css/dashboard-layout.css"
+>
  
 <style> 
     .add-product-page { 
@@ -729,6 +740,202 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             flex: 1; 
         } 
     } 
+
+    /* FINAL-UI-FIX: ADD PRODUCT RESPONSIVE LAYOUT
+       =========================================================
+       Keeps content separate from the fixed sidebar and fixes
+       buttons at desktop, laptop, half-screen, and mobile sizes.
+       ========================================================= */
+
+    .add-product-page {
+        width: 100% !important;
+        max-width: 1100px;
+
+        margin-left: auto;
+        margin-right: auto;
+
+        padding: 32px;
+
+        box-sizing: border-box;
+    }
+
+    .add-product-header {
+        width: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 20px;
+
+        box-sizing: border-box;
+    }
+
+    .add-product-heading {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .add-product-heading h1 {
+        word-break: normal;
+    }
+
+
+    /* ---------------------------------------------------------
+       PRODUCT LIST BUTTON
+       --------------------------------------------------------- */
+
+    .back-product-button {
+        flex: 0 0 auto !important;
+
+        min-height: 42px;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        gap: 7px;
+
+        padding: 10px 16px !important;
+
+        font-family:
+            "Inter",
+            "Segoe UI",
+            Arial,
+            sans-serif !important;
+
+        font-size: 14px !important;
+        font-weight: 600 !important;
+
+        line-height: 1 !important;
+
+        text-align: center;
+
+        white-space: nowrap;
+
+        text-decoration: none !important;
+
+        box-sizing: border-box;
+    }
+
+
+    /* ---------------------------------------------------------
+       ADD PRODUCT SUBMIT BUTTON
+       --------------------------------------------------------- */
+
+    .add-product-submit {
+        min-width: 140px;
+        min-height: 44px;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        padding: 10px 20px !important;
+
+        border: 0;
+
+        font-family:
+            "Inter",
+            "Segoe UI",
+            Arial,
+            sans-serif !important;
+
+        font-size: 14px !important;
+        font-weight: 600 !important;
+
+        line-height: 1 !important;
+
+        text-align: center !important;
+
+        white-space: nowrap;
+
+        box-sizing: border-box;
+
+        cursor: pointer;
+    }
+
+
+    /* ---------------------------------------------------------
+       FORM WIDTH SAFETY
+       --------------------------------------------------------- */
+
+    .add-product-page,
+    .add-product-card,
+    .add-product-form,
+    .add-product-page form {
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    .add-product-page input,
+    .add-product-page select,
+    .add-product-page textarea {
+        width: 100%;
+        max-width: 100%;
+
+        box-sizing: border-box;
+    }
+
+
+    /* ---------------------------------------------------------
+       LAPTOP / HALF-SCREEN
+       --------------------------------------------------------- */
+
+    @media (max-width: 1200px) {
+
+        .add-product-page {
+            max-width: none;
+
+            padding-left: 24px;
+            padding-right: 24px;
+        }
+    }
+
+
+    /* ---------------------------------------------------------
+       SIDEBAR MOBILE BREAKPOINT
+       dashboard-layout.css changes main area to 100% here.
+       --------------------------------------------------------- */
+
+    @media (max-width: 900px) {
+
+        .add-product-page {
+            width: 100%;
+
+            padding: 24px 18px;
+        }
+
+        .add-product-header {
+            gap: 14px;
+        }
+    }
+
+
+    /* ---------------------------------------------------------
+       SMALL MOBILE
+       --------------------------------------------------------- */
+
+    @media (max-width: 760px) {
+
+        .add-product-page {
+            padding: 20px 14px;
+        }
+
+        .add-product-header {
+            flex-direction: column;
+
+            align-items: stretch;
+        }
+
+        .back-product-button {
+            width: fit-content;
+        }
+
+        .add-product-submit {
+            width: 100%;
+        }
+    }
 </style> 
  
 <div class="app-layout"> 
@@ -757,7 +964,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         href="<?php echo e($basePath); ?>/modules/products/index.php" 
                         class="back-product-button" 
                     > 
-                        â† Product List 
+                        &larr; Product List 
                     </a> 
                 </div> 
  

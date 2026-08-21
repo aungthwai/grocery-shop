@@ -696,3 +696,261 @@ window.GrocerEaseSidebarDropdown = (function () {
 })();
 </script>
 
+<!-- SIDEBAR-TYPOGRAPHY-HARD-LOCK-START -->
+
+<style>
+/*
+|--------------------------------------------------------------------------
+| GROCER EASE SIDEBAR TYPOGRAPHY HARD LOCK
+|--------------------------------------------------------------------------
+| This is intentionally kept inside sidebar.php so every page gets the
+| exact same sidebar typography regardless of its own CSS files.
+|--------------------------------------------------------------------------
+*/
+
+/* Main menu items */
+.app-sidebar .sidebar-link,
+.app-sidebar a.sidebar-link,
+.app-sidebar button.sidebar-link,
+.app-sidebar .sidebar-toggle {
+    font-family: "Segoe UI", Arial, sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    line-height: 18px !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+
+    -webkit-text-size-adjust: 100% !important;
+    text-size-adjust: 100% !important;
+}
+
+/* Normal / hover / focus / active must ALL stay identical */
+.app-sidebar .sidebar-link:hover,
+.app-sidebar .sidebar-link:focus,
+.app-sidebar .sidebar-link:active,
+.app-sidebar .sidebar-link.active,
+.app-sidebar .sidebar-toggle:hover,
+.app-sidebar .sidebar-toggle:focus,
+.app-sidebar .sidebar-toggle:active {
+    font-family: "Segoe UI", Arial, sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    line-height: 18px !important;
+    letter-spacing: 0 !important;
+}
+
+/* Text labels */
+.app-sidebar .sidebar-label,
+.app-sidebar .sidebar-link .sidebar-label,
+.app-sidebar .sidebar-link:hover .sidebar-label,
+.app-sidebar .sidebar-link.active .sidebar-label,
+.app-sidebar .sidebar-toggle .sidebar-label,
+.app-sidebar .sidebar-toggle:hover .sidebar-label {
+    font-family: "Segoe UI", Arial, sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    line-height: 18px !important;
+    letter-spacing: 0 !important;
+}
+
+/* Product / Supplier / Settings submenu */
+.app-sidebar .sidebar-sublink,
+.app-sidebar a.sidebar-sublink,
+.app-sidebar .sidebar-sublink:hover,
+.app-sidebar .sidebar-sublink:focus,
+.app-sidebar .sidebar-sublink:active,
+.app-sidebar .sidebar-sublink.active {
+    font-family: "Segoe UI", Arial, sans-serif !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    line-height: 16px !important;
+    letter-spacing: 0 !important;
+
+    -webkit-text-size-adjust: 100% !important;
+    text-size-adjust: 100% !important;
+}
+
+/* Icons */
+.app-sidebar .sidebar-icon,
+.app-sidebar .sidebar-link .sidebar-icon,
+.app-sidebar .sidebar-link:hover .sidebar-icon,
+.app-sidebar .sidebar-link.active .sidebar-icon {
+    font-size: 15px !important;
+    line-height: 15px !important;
+}
+
+/* Dropdown arrows */
+.app-sidebar .sidebar-arrow {
+    font-size: 11px !important;
+    line-height: 11px !important;
+}
+
+/* Brand stays identical everywhere */
+.app-sidebar .sidebar-brand-name {
+    font-family: "Segoe UI", Arial, sans-serif !important;
+    font-size: 17px !important;
+    font-weight: 700 !important;
+    line-height: 21px !important;
+}
+
+.app-sidebar .sidebar-brand-subtitle {
+    font-family: "Segoe UI", Arial, sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 400 !important;
+    line-height: 14px !important;
+}
+
+/* Footer */
+.app-sidebar .sidebar-footer-text span {
+    font-family: "Segoe UI", Arial, sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+}
+
+.app-sidebar .sidebar-footer-text small {
+    font-family: "Segoe UI", Arial, sans-serif !important;
+    font-size: 10px !important;
+    font-weight: 400 !important;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Prevent generic page button/link CSS from changing navigation typography
+|--------------------------------------------------------------------------
+*/
+
+.app-sidebar a,
+.app-sidebar button,
+.app-sidebar label {
+    -webkit-text-size-adjust: 100% !important;
+    text-size-adjust: 100% !important;
+}
+</style>
+
+<script>
+(function () {
+    "use strict";
+
+    /*
+    |--------------------------------------------------------------------------
+    | SIDEBAR FONT STABILIZER
+    |--------------------------------------------------------------------------
+    | CSS should already be sufficient, but this also puts the important
+    | typography values directly on the sidebar elements. This prevents
+    | individual module stylesheets from resizing them.
+    |--------------------------------------------------------------------------
+    */
+
+    function stabilizeGrocerEaseSidebar() {
+
+        var mainItems = document.querySelectorAll(
+            ".app-sidebar .sidebar-link, " +
+            ".app-sidebar .sidebar-toggle, " +
+            ".app-sidebar .sidebar-label"
+        );
+
+        mainItems.forEach(function (element) {
+            element.style.setProperty(
+                "font-family",
+                '"Segoe UI", Arial, sans-serif',
+                "important"
+            );
+
+            element.style.setProperty(
+                "font-size",
+                "14px",
+                "important"
+            );
+
+            element.style.setProperty(
+                "font-weight",
+                "500",
+                "important"
+            );
+
+            element.style.setProperty(
+                "line-height",
+                "18px",
+                "important"
+            );
+
+            element.style.setProperty(
+                "letter-spacing",
+                "0px",
+                "important"
+            );
+        });
+
+
+        var subItems = document.querySelectorAll(
+            ".app-sidebar .sidebar-sublink"
+        );
+
+        subItems.forEach(function (element) {
+            element.style.setProperty(
+                "font-family",
+                '"Segoe UI", Arial, sans-serif',
+                "important"
+            );
+
+            element.style.setProperty(
+                "font-size",
+                "12px",
+                "important"
+            );
+
+            element.style.setProperty(
+                "font-weight",
+                "500",
+                "important"
+            );
+
+            element.style.setProperty(
+                "line-height",
+                "16px",
+                "important"
+            );
+
+            element.style.setProperty(
+                "letter-spacing",
+                "0px",
+                "important"
+            );
+        });
+    }
+
+
+    /* Run immediately */
+    stabilizeGrocerEaseSidebar();
+
+
+    /* Run again after the page finishes loading */
+    window.addEventListener(
+        "load",
+        stabilizeGrocerEaseSidebar
+    );
+
+
+    /* Also handle browser Back / Forward cache */
+    window.addEventListener(
+        "pageshow",
+        stabilizeGrocerEaseSidebar
+    );
+
+
+    /*
+     * A web font finishing loading can change the apparent size of text.
+     * Run the lock again after fonts finish loading.
+     */
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(function () {
+            stabilizeGrocerEaseSidebar();
+        });
+    }
+})();
+</script>
+
+<!-- SIDEBAR-TYPOGRAPHY-HARD-LOCK-END -->
+

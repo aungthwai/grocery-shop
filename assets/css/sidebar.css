@@ -524,3 +524,343 @@
     }
 
 }
+/* =========================================================
+   FINAL SIDEBAR TYPOGRAPHY + SIZE LOCK
+   =========================================================
+   Prevents page-specific stylesheets, buttons, links, and
+   inherited body styles from changing sidebar text sizes.
+   ========================================================= */
+
+.app-sidebar {
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    font-size: 14px;
+}
+
+
+/* Main navigation links */
+
+.app-sidebar .sidebar-link,
+.app-sidebar a.sidebar-link,
+.app-sidebar button.sidebar-link,
+.app-sidebar .sidebar-toggle {
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif !important;
+
+    font-size: 14px !important;
+    line-height: 1.3 !important;
+
+    font-weight: 500;
+
+    text-decoration: none;
+}
+
+
+/* Active main link */
+
+.app-sidebar .sidebar-link.active {
+    font-size: 14px !important;
+    font-weight: 600;
+}
+
+
+/* Main labels */
+
+.app-sidebar .sidebar-label {
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif !important;
+
+    font-size: 14px !important;
+    line-height: 1.3 !important;
+}
+
+
+/* Dropdown/submenu items */
+
+.app-sidebar .sidebar-sublink,
+.app-sidebar a.sidebar-sublink {
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif !important;
+
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+
+    font-weight: 500;
+}
+
+
+/* Sidebar icon sizes must also remain stable */
+
+.app-sidebar .sidebar-icon {
+    font-size: 15px !important;
+    line-height: 1 !important;
+}
+
+
+/* Dropdown arrows */
+
+.app-sidebar .sidebar-arrow {
+    font-size: 11px !important;
+    line-height: 1 !important;
+}
+
+
+/* Brand */
+
+.app-sidebar .sidebar-brand-name {
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif !important;
+
+    font-size: 17px !important;
+    line-height: 1.25 !important;
+}
+
+
+.app-sidebar .sidebar-brand-subtitle {
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif !important;
+
+    font-size: 11px !important;
+    line-height: 1.25 !important;
+}
+
+
+/* Footer */
+
+.app-sidebar .sidebar-footer-text span {
+    font-size: 11px !important;
+}
+
+
+.app-sidebar .sidebar-footer-text small {
+    font-size: 10px !important;
+}
+/* FINAL-UI-FIX: SIDEBAR TYPOGRAPHY LOCK
+   =========================================================
+   Keeps sidebar text and icons the same size on every page.
+   Page-specific CSS is not allowed to resize navigation.
+   ========================================================= */
+
+.app-sidebar {
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif !important;
+
+    font-size: 14px !important;
+}
+
+/* Main sidebar buttons and links */
+.app-sidebar .sidebar-link,
+.app-sidebar a.sidebar-link,
+.app-sidebar button.sidebar-link,
+.app-sidebar .sidebar-toggle {
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif !important;
+
+    font-size: 14px !important;
+    line-height: 1.3 !important;
+
+    font-weight: 500;
+
+    text-decoration: none !important;
+}
+
+/* Active sidebar button */
+.app-sidebar .sidebar-link.active {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+}
+
+/* Main sidebar labels */
+.app-sidebar .sidebar-label {
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif !important;
+
+    font-size: 14px !important;
+    line-height: 1.3 !important;
+
+    font-weight: inherit;
+}
+
+/* Product / Supplier / Settings submenu */
+.app-sidebar .sidebar-sublink,
+.app-sidebar a.sidebar-sublink {
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif !important;
+
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+
+    font-weight: 500 !important;
+}
+
+/* Icons */
+.app-sidebar .sidebar-icon {
+    width: 22px !important;
+    min-width: 22px !important;
+
+    font-size: 15px !important;
+    line-height: 1 !important;
+}
+
+/* Dropdown arrows */
+.app-sidebar .sidebar-arrow {
+    font-size: 11px !important;
+    line-height: 1 !important;
+}
+
+/* Logo / brand */
+.app-sidebar .sidebar-brand-name {
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif !important;
+
+    font-size: 17px !important;
+    line-height: 1.25 !important;
+
+    font-weight: 700 !important;
+}
+
+.app-sidebar .sidebar-brand-subtitle {
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif !important;
+
+    font-size: 11px !important;
+    line-height: 1.25 !important;
+}
+
+/* Sidebar footer */
+.app-sidebar .sidebar-footer-text span {
+    font-size: 11px !important;
+}
+
+.app-sidebar .sidebar-footer-text small {
+    font-size: 10px !important;
+}
+
+/* FINAL-SIDEBAR-SAME-TEXT-SIZE
+   =========================================================
+   Keep sidebar text exactly the same size and weight whether
+   the item is normal, hovered, active, or a dropdown button.
+   ========================================================= */
+
+/* Main navigation */
+.app-sidebar .sidebar-link,
+.app-sidebar .sidebar-link:hover,
+.app-sidebar .sidebar-link:focus,
+.app-sidebar .sidebar-link:active,
+.app-sidebar .sidebar-link.active,
+.app-sidebar .sidebar-toggle,
+.app-sidebar .sidebar-toggle:hover,
+.app-sidebar .sidebar-toggle:focus,
+.app-sidebar .sidebar-toggle:active {
+    font-family: "Segoe UI", Arial, sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    line-height: 1.3 !important;
+
+    letter-spacing: normal !important;
+
+    transform: none !important;
+    zoom: 1 !important;
+
+    -webkit-text-size-adjust: 100% !important;
+    text-size-adjust: 100% !important;
+}
+
+/* Main text labels */
+.app-sidebar .sidebar-label,
+.app-sidebar .sidebar-link:hover .sidebar-label,
+.app-sidebar .sidebar-link.active .sidebar-label,
+.app-sidebar .sidebar-toggle:hover .sidebar-label,
+.app-sidebar .sidebar-toggle:active .sidebar-label {
+    font-family: "Segoe UI", Arial, sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    line-height: 1.3 !important;
+
+    letter-spacing: normal !important;
+
+    transform: none !important;
+}
+
+/* Dropdown submenu links */
+.app-sidebar .sidebar-sublink,
+.app-sidebar .sidebar-sublink:hover,
+.app-sidebar .sidebar-sublink:focus,
+.app-sidebar .sidebar-sublink:active,
+.app-sidebar .sidebar-sublink.active {
+    font-family: "Segoe UI", Arial, sans-serif !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    line-height: 1.35 !important;
+
+    letter-spacing: normal !important;
+
+    transform: none !important;
+    zoom: 1 !important;
+}
+
+/* Keep icons stable too */
+.app-sidebar .sidebar-icon,
+.app-sidebar .sidebar-link:hover .sidebar-icon,
+.app-sidebar .sidebar-link.active .sidebar-icon {
+    font-size: 15px !important;
+    font-weight: normal !important;
+    line-height: 1 !important;
+
+    transform: none !important;
+}
+
+/* Dropdown arrow keeps only rotation behavior */
+.app-sidebar .sidebar-arrow {
+    font-size: 11px !important;
+    line-height: 1 !important;
+}
+
+/* Prevent button browser defaults from changing typography */
+.app-sidebar button {
+    font-family: "Segoe UI", Arial, sans-serif !important;
+    font-size: inherit !important;
+}
+
+/* Active item may change color/background, but NOT text size/weight */
+.app-sidebar .sidebar-link.active,
+.app-sidebar .sidebar-sublink.active {
+    font-weight: 500 !important;
+}
